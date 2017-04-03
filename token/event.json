@@ -1,0 +1,12 @@
+{
+  "path": {
+    "realm": "default"
+  },
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  "grant_type": "authorization_code",
+  "client_id": "default",
+  "username": "username",
+  "password": "password"
+}

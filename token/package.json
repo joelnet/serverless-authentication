@@ -1,0 +1,22 @@
+{
+  "name": "aws-lambda-auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "functional-js": "git+https://github.com/joelnet/functional-js.git",
+    "jsonwebtoken": "^7.3.0"
+  },
+  "devDependencies": {
+    "keypair": "^1.0.1",
+    "tap-spec": "^4.1.1"
+  },
+  "scripts": {
+    "test": "tape tests/**/*.js | node_modules/.bin/tap-spec",
+    "debug": "SLS_DEBUG=true serverless invoke local --function token --path event.json",
+    "secret:generate": "node ./tools/generate-private-key.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
