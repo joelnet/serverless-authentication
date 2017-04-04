@@ -1,12 +1,6 @@
 const callbackify = require('functional-js/promises/callbackify')
-const withLibs = require('./lib/withLibs')
-
-const libs = {
-    fs: require('fs')
-}
-
-const tokenService = withLibs(libs, require('./services/tokenService'))
+const token = require('./services/token')
+const withJsonResponse = require('./lib/serviceHelpers').withJsonResponse
 
 module.exports.token = callbackify((event, context) =>
-   tokenService({ event })
-)
+    withJsonResponse(token)(event))

@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: aws-lambda-oidc
+service: lambda-auth
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -20,6 +20,12 @@ service: aws-lambda-oidc
 provider:
   name: aws
   runtime: nodejs4.3
+  environment:
+    STAGE: dev
+    CERT: ./.secret/private.key
+    TOKEN_ALGORITHM: RS256
+    TOKEN_EXPIRATION: 15m
+    REFRESH_TOKEN_EXPIRATION: 30d
 
 # you can overwrite defaults here
 #  stage: dev
