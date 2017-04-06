@@ -1,10 +1,12 @@
+const promisify = require('functional-js/promises/promisify')
+const sign = promisify(require('jsonwebtoken').sign)
+const validatePassword = promisify(require('bcrypt-nodejs').compare)
 const pipeAsync = require('../../lib/pipeAsync')
-const crypto = require('../../lib/crypto')
 
 const generateTokens = props => cert =>
     Promise.all([
-        crypto.sign({ realm: props.realm, type: 'id_token' }, cert, { audience: props.client_id, subject: props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
-        crypto.sign({ realm: props.realm, type: 'refresh_token' }, cert, { audience: props.client_id, subject: props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
+        sign({ realm: props.realm, type: 'id_token' }, cert, { audience: props.client_id, subject: props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+        sign({ realm: props.realm, type: 'refresh_token' }, cert, { audience: props.client_id, subject: props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
     ])
 
 const getCert = props =>
@@ -24,6 +26,6 @@ module.exports = {
     validateUser: props =>
         pipeAsync(
             user => user ? user : Promise.reject('[401] Login Failed'),
-            user => crypto.validatePassword(props.password, user.password),
+            user => validatePassword(props.password, user.password),
             valid => valid ? props : Promise.reject('[401] Login Failed'))
 }

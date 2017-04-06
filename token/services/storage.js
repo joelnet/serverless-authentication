@@ -3,20 +3,25 @@ const settings = require('../settings')
 const promisify = require('functional-js/promises/promisify')
 const docClient = new AWS.DynamoDB.DocumentClient(settings.aws)
 
-const query = promisify(docClient.query).bind(docClient)
-
 const tables = {
     users: `social-${process.env.STAGE}-users`
 }
 
-const getFirst = results => results.Items[0]
+const docClientQuery =
+    promisify(docClient.query).bind(docClient)
+
+const query = (table, condition, values) =>
+    docClientQuery({
+        TableName: table,
+        KeyConditionExpression: condition,
+        ExpressionAttributeValues: values
+    })
+
+const getFirst = results =>
+    results.Items[0]
 
 module.exports = {
     getUser: (realm, userId) =>
-        query({
-                TableName: tables.users,
-                KeyConditionExpression: 'userId = :userId',
-                ExpressionAttributeValues: { ':userId': userId }
-            })
+        query(tables.users, 'userId = :userId', { ':userId': userId })
             .then(getFirst)
 }
