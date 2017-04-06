@@ -1,7 +1,9 @@
 const AWS = require('aws-sdk')
-const settings = require('../settings')
 const promisify = require('functional-js/promises/promisify')
-const docClient = new AWS.DynamoDB.DocumentClient(settings.aws)
+const docClient = new AWS.DynamoDB.DocumentClient({
+        region: process.env.REGION,
+        apiVersion: process.env.APIVERSION
+    })
 
 const tables = {
     users: `social-${process.env.STAGE}-users`
