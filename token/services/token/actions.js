@@ -21,7 +21,8 @@ module.exports = {
         )(props),
 
     getUserFromStorage: props =>
-        props.actions.getUser(props.realm, props.username),
+        props.actions.getUser(props.realm, props.username)
+            .catch(err => Promise.reject('[500] Unknown Error')),
 
     validateUser: props =>
         pipeAsync(

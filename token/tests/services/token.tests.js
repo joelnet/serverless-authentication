@@ -118,6 +118,22 @@ test('services/token [password] with valid password succeeds', t => {
         })
 })
 
+test('services/token [password] with db error fails', t => {
+    t.plan(1)
+
+    token({
+            path: { realm: 'realm' },
+            grant_type: 'password',
+            client_id: 'client_id',
+            username: 'username',
+            password: 'password'
+        },
+        {
+            getUser: () => Promise.reject('Uh Oh!')
+        })
+        .catch(err => t.equal(err, '[500] Unknown Error'))
+})
+
 test('services/token [password] with no user fails', t => {
     t.plan(1)
 
