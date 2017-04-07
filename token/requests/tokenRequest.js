@@ -22,8 +22,11 @@ const schema = Joi.object().keys({
     refresh_token: Joi.any().when('grant_type', { is: 'refresh_token', then: Joi.required(), otherwise: Joi.forbidden() })
 })
 
-module.exports = event =>
-    Promise.resolve(event)
-        .then(getRequest)
-        .then(request => joiValidate(request, schema))
-        .catch(err => Promise.reject(get(['details', 0, 'message'], err)))
+module.exports = func =>
+    function(event) {
+        return Promise.resolve(event)
+            .then(getRequest)
+            .then(request => joiValidate(request, schema))
+            .catch(err => Promise.reject(get(['details', 0, 'message'], err)))
+            .then(request => func.apply(null, [request].concat(Array.prototype.slice.call(arguments, 1))))
+    }

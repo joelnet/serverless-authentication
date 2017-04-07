@@ -5,7 +5,7 @@ test('requests/tokenRequest with no object returns grant_type error', t => {
     t.plan(1)
     const data = {}
     
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"grant_type" is required', '"grant_type" is required'))
 })
 
@@ -15,7 +15,7 @@ test('requests/tokenRequest with no realm returns realm error', t => {
         grant_type: 'password'
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"realm" is required', '"realm" is required'))
 })
 
@@ -26,7 +26,7 @@ test('requests/tokenRequest with no client_id returns realm error', t => {
         path: { realm: 'realm' }
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"client_id" is required', '"client_id" is required'))
 })
 
@@ -38,7 +38,7 @@ test('requests/tokenRequest with grant_type=password and no username returns use
         client_id: 'client_id'
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"username" is required', '"username" is required'))
 })
 
@@ -51,7 +51,7 @@ test('requests/tokenRequest with grant_type=password and no password returns pas
         username: 'username'
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"password" is required', '"password" is required'))
 })
 
@@ -66,7 +66,7 @@ test('requests/tokenRequest with grant_type=password and refresh_token returns r
         refresh_token: 'refresh_token'
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"refresh_token" is not allowed', '"refresh_token" is not allowed'))
 })
 
@@ -80,7 +80,7 @@ test('requests/tokenRequest with grant_type=password returns success', t => {
         password: 'password'
     }
 
-    validate(data)
+    validate(x => x)(data)
         .then(data => t.ok(data, 'should be success'))
 })
 
@@ -92,7 +92,7 @@ test('requests/tokenRequest with grant_type=refresh_token and no refresh_token r
         client_id: 'client_id'
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"refresh_token" is required', '"refresh_token" is required'))
 })
 
@@ -105,7 +105,7 @@ test('requests/tokenRequest with grant_type=refresh_token and username returns u
         username: 'username'
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"username" is not allowed', '"username" is not allowed'))
 })
 
@@ -118,7 +118,7 @@ test('requests/tokenRequest with grant_type=refresh_token and password returns p
         password: 'password'
     }
 
-    validate(data)
+    validate()(data)
         .catch(error => t.equal(error, '"password" is not allowed', '"password" is not allowed'))
 })
 
@@ -131,6 +131,18 @@ test('requests/tokenRequest with grant_type=refresh_token returns success', t =>
         refresh_token: 'refresh_token'
     }
 
-    validate(data)
+    validate(x => x)(data)
         .then(data => t.ok(data, 'should return success'))
+})
+
+test('requests/tokenRequest calls func', t => {
+    t.plan(1)
+    const data = {
+        grant_type: 'refresh_token',
+        path: { realm: 'realm' },
+        client_id: 'client_id',
+        refresh_token: 'refresh_token'
+    }
+
+    validate(data => t.ok(data, 'should return success'))(data)
 })
