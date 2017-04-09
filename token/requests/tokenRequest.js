@@ -1,7 +1,6 @@
 const Joi = require('joi')
 const promisify = require('functional-js/promises/promisify')
 const get = require('../lib/get')
-
 const joiValidate = promisify(Joi.validate)
 
 const getRequest = event => ({

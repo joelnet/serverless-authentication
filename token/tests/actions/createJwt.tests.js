@@ -1,5 +1,5 @@
 const test = require('tape')
-const actions = require('../../services/token/actions')
+const createJwt = require('../../actions/createJwt')
 const jwt = require('jsonwebtoken')
 const promisify = require('functional-js/promises/promisify')
 const jwtVerify = promisify(jwt.verify)
@@ -57,12 +57,12 @@ test('actions.createJwt with invalid cert returns state with errors ', t => {
     const state = getMockState()
     state.actions.readFile = () => Promise.resolve('invalid cert')
 
-    actions.createJwt(state)
+    createJwt(state)
         .catch(err => {
             t.equal(err.logs.length, 2, 'state.logs should contain 2 logs')
             t.true(err.logs.filter(x => x.type === 'error').length, 'state.logs should contain type error')
             t.true(err.logs.filter(x => x.type === 'debug').length, 'state.logs should contain type debug')
-            t.true(err.logs[0].message.indexOf('Error generating tokens.') > -1, 'Error generating tokens.')
+            t.true(err.logs[0].message.indexOf('[500] Internal Server Error') > -1, '[500] Internal Server Error')
         })
 })
 
@@ -72,12 +72,12 @@ test('actions.createJwt with state returns state with errors ', t => {
     const state = getMockState()
     state.actions = undefined
 
-    actions.createJwt(state)
+    createJwt(state)
         .catch(err => {
             t.equal(err.logs.length, 2, 'state.logs must have 2 log')
             t.true(err.logs.filter(x => x.type === 'error').length, 'state.logs should contain type error')
             t.true(err.logs.filter(x => x.type === 'debug').length, 'state.logs should contain type debug')
-            t.true(err.logs[0].message.indexOf('Error generating tokens.') > -1, 'Error generating tokens.')
+            t.true(err.logs[0].message.indexOf('[500] Internal Server Error') > -1, '[500] Internal Server Error')
         })
 })
 
@@ -86,7 +86,7 @@ test('actions.createJwt returns debug log', t => {
 
     const state = getMockState()
 
-    actions.createJwt(state)
+    createJwt(state)
         .then(state => {
             t.equal(state.logs.length, 1, 'state.logs must have 1 log')
             t.equal(state.logs[0].type, 'debug', 'state.logs[0] should be of type debug')
@@ -98,7 +98,7 @@ test('actions.createJwt returns valid token', t => {
 
     const state = getMockState()
 
-    actions.createJwt(state)
+    createJwt(state)
         .then(state => {
             jwtVerify(state.token.id_token, publicKey)
                 .then(token => {

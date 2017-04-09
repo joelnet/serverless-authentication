@@ -1,5 +1,5 @@
 const test = require('tape')
-const actions = require('../../services/token/actions')
+const getUserFromStorage = require('../../actions/getUserFromStorage')
 
 const getMockState = () =>
     ({
@@ -20,14 +20,14 @@ test('actions.getUserFromStorage with invalid state fails', t => {
 
     const state = { logs: [] }
 
-    actions.getUserFromStorage(state)
+    getUserFromStorage(state)
         .catch(err => {
             const errors = err.logs.filter(x => x.type === 'error')
             const debugs = err.logs.filter(x => x.type === 'debug')
 
             t.true(errors.length, 'state.logs should contain type error')
             t.true(debugs.length, 'state.logs should contain type debug')
-            t.true(errors[0].message.indexOf('[500] Unknown Error') > -1, 'Error generating tokens.')
+            t.true(errors[0].message.indexOf('[500] Unknown Error') > -1, '[500] Unknown Error')
         })
 })
 
@@ -37,7 +37,7 @@ test('actions.getUserFromStorage with no user returns fail', t => {
     const state = getMockState()
     state.props.username = 'unknown-user'
 
-    actions.getUserFromStorage(state)
+    getUserFromStorage(state)
         .catch(err => {
             const errors = err.logs.filter(x => x.type === 'error')
 
@@ -53,6 +53,6 @@ test('actions.getUserFromStorage returns user', t => {
     const state = getMockState()
     state.actions.getUser = () => Promise.resolve(user)
 
-    actions.getUserFromStorage(state)
+    getUserFromStorage(state)
         .then(state => t.equal(state.user, user, 'state must contain user'))
 })

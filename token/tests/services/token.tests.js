@@ -111,7 +111,7 @@ test('services/token [password] with invalid password fails', t => {
     }
 
     token(request, mocks)
-        .catch(err => t.equal(err, '[401] Login Failed', '[401] Login Failed'))
+        .catch(err => t.equal(err, '[401] Unauthorized', '[401] Unauthorized'))
 })
 
 test('services/token [password] with no user fails', t => {
