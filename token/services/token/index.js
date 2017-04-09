@@ -2,26 +2,41 @@ const fs = require('fs')
 const promisify = require('functional-js/promises/promisify')
 const getUser = require('../storage').getUser
 const pipeAsync = require('../../lib/pipeAsync')
-const withActions = require('../../lib/serviceHelpers').withActions
 const validatedRequest = require('../../requests/tokenRequest')
 
 const createJwt = require('./actions').createJwt
 const validateUser = require('./actions').validateUser
 const getUserFromStorage = require('./actions').getUserFromStorage
+const writeLogs = state => state.actions.writeLogs(state)
 
-const injectActionsIntoProps = withActions({
+const actions = {
+    getUser,
     readFile: promisify(fs.readFile),
-    getUser
+    writeLogs: state =>
+        (state.logs.map(console.log.bind(console)), state)
+}
+
+module.exports = validatedRequest((request, dependencies) => {
+    const state = {
+        props: request,
+        actions: Object.assign({}, actions, dependencies),
+        logs: []
+    }
+
+    return pipeAsync(
+        getUserFromStorage,
+        validateUser,
+        writeLogs,
+        createJwt,
+        state => state.token
+    )(state)
+    .catch(state => {
+        if (typeof state === 'string') return Promise.reject(state)
+
+        const errors = state.logs.filter(log => log.type === 'error')
+
+        return Promise.reject(
+            errors.length ? errors[0].message : '[500] Unknown Error'
+        )
+    })
 })
-
-const getUserFromStorageAndValidatePassword = props =>
-    getUserFromStorage(props)
-        .then(validateUser(props))
-
-module.exports = validatedRequest((request, dependencies) =>
-    pipeAsync(
-        injectActionsIntoProps(dependencies),
-        getUserFromStorageAndValidatePassword,
-        createJwt
-    )(request)
-)

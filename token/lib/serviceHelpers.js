@@ -15,12 +15,6 @@ const failResponse = error => {
 const successResponse = obj =>
     response(SUCCESS, obj)
 
-const withActions = defaultActions => injectedActions => props => {
-    const actions = Object.assign({}, defaultActions, injectedActions)
-
-    return Object.assign({}, props, { actions })
-}
-
 const withJsonResponse = func => x =>
     func(x)
         .then(successResponse)
@@ -29,6 +23,5 @@ const withJsonResponse = func => x =>
 module.exports = {
     failResponse,
     successResponse,
-    withActions,
     withJsonResponse
 }
