@@ -21,7 +21,7 @@ const getCert = state =>
 const addTokensToState = state => tokens =>
     set(lensProp('token'), { id_token: tokens[0], refresh_token: tokens[1], token_type: 'Bearer' }, state)
 
-const addDebugMessages = state =>
+const addDebugLogs = state =>
     set(lensProp('logs'), state.logs.concat({ type: 'debug', message: `tokens successfully created for ${state.props.realm}.${state.props.username}.` }), state)
 
 const createJwt = state =>
@@ -29,7 +29,7 @@ const createJwt = state =>
         getCert,
         generateTokens,
         addTokensToState(state),
-        addDebugMessages
+        addDebugLogs
     )(state)
 
 const handleException = func => state =>
