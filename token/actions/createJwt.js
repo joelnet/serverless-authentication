@@ -11,6 +11,7 @@ const reject = (logs, state) =>
 const generateTokens = state =>
     Promise.all([
         sign({ realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+        sign({ realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
         sign({ realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
     ])
 
@@ -19,7 +20,7 @@ const getCert = state =>
         .then(set(lensProp('cert'), _, state))
 
 const addTokensToState = state => tokens =>
-    set(lensProp('token'), { id_token: tokens[0], refresh_token: tokens[1], token_type: 'Bearer' }, state)
+    set(lensProp('token'), { access_token: tokens[0], id_token: tokens[1], refresh_token: tokens[2], token_type: 'Bearer' }, state)
 
 const addDebugLogs = state =>
     set(lensProp('logs'), state.logs.concat({ type: 'debug', message: `tokens successfully created for ${state.props.realm}.${state.props.username}.` }), state)
