@@ -1,6 +1,9 @@
 const fs                 = require('fs')
 const promisify          = require('functional-js/promises/promisify')
 const merge              = require('ramda/src/merge')
+const pathOr             = require('ramda/src/pathOr')
+const propOr             = require('ramda/src/propOr')
+const defaultTo          = require('ramda/src/defaultTo')
 const getUser            = require('./storage').getUser
 const pipeAsync          = require('../lib/pipeAsync')
 const validatedRequest   = require('../requests/tokenRequest')
@@ -20,10 +23,13 @@ const actions = {
 const handleException = func => state =>
     func(state)
         .catch(state => {
-            const errors = ((state||{}).logs||[]).filter(log => log.type === 'error')
+            const errors = propOr([], 'logs', state).filter(log => log.type === 'error')
+
+            console.log('or', pathOr('[500] Unknown Error', [0, 'message'], errors))
 
             return Promise.reject(
-                errors.length ? errors[0].message : '[500] Unknown Error'
+                pathOr('[500] Unknown Error', [0, 'message'], errors)
+                //errors.length ? errors[0].message : '[500] Unknown Error'
             )
         })
 

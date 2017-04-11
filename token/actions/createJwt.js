@@ -1,8 +1,9 @@
 const promisify = require('functional-js/promises/promisify')
 const sign      = promisify(require('jsonwebtoken').sign)
+const _         = require('ramda/src/__')
 const set       = require('ramda/src/set')
 const lensProp  = require('ramda/src/lensProp')
-const _         = require('ramda/src/__')
+const pathOr    = require('ramda/src/pathOr')
 const uuid      = require('uuid/v4')
 const pipeAsync = require('../lib/pipeAsync')
 
@@ -11,7 +12,7 @@ const reject = (logs, state) =>
 
 const generateTokens = state =>
     Promise.all([
-        sign({ jti: uuid(), typ: 'Bearer', realm: state.props.realm, roles: (state.user||{}).roles },
+        sign({ jti: uuid(), typ: 'Bearer', realm: state.props.realm, roles: pathOr([], ['user', 'roles'], state) },
              state.cert,
             { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
         sign({ jti: uuid(), typ: 'ID', realm: state.props.realm, preferred_username: state.props.username },
