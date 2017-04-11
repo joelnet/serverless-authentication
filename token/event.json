@@ -1,6 +1,6 @@
 {
   "path": {
-    "realm": "default"
+    "realm": "test"
   },
   "headers": {
     "Content-Type": "application/x-www-form-urlencoded"

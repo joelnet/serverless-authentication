@@ -1,2 +1,2 @@
 module.exports = state =>
-    (state.logs.map(console.log.bind(console)), state)
+    (state.logs.map(log => console.log(log)), state)

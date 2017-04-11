@@ -17,7 +17,7 @@ const handleException = func => state =>
         .catch(message => Promise.reject(appendLogs([UNKNOWN_ERROR, { type: 'debug', message }], state)))
 
 const failAndLogIfUserDoesNotExist = state =>
-    state.user ? Promise.resolve(appendLogs([ { type: 'info', message: 'Login success fail' + ': ${state.props.username}.' } ], state))
+    state.user ? Promise.resolve(appendLogs([ { type: 'info', message: `Login success: ${state.props.username}.` } ], state))
                : Promise.reject(appendLogs([ { type: 'error', message: '[401] Unauthorized' } ], state))
 
 module.exports = state =>
