@@ -5,3 +5,5 @@ env:
   - TEST_DIR=token
 #  - TEST_DIR=authentication
 script: cd $TEST_DIR && npm install && npm test
+after_success:
+  - 'cat ./coverage/lcov.info | ./node_modules/.bin/coveralls'
