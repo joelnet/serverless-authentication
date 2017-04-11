@@ -11,17 +11,28 @@ const reject = (logs, state) =>
 
 const generateTokens = state =>
     Promise.all([
-        sign({ jti: uuid(), realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
-        sign({ jti: uuid(), realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
-        sign({ jti: uuid(), realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
+        sign({ jti: uuid(), typ: 'Bearer', realm: state.props.realm, roles: (state.user||{}).roles },
+             state.cert,
+            { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+        sign({ jti: uuid(), typ: 'ID', realm: state.props.realm, preferred_username: state.props.username },
+             state.cert,
+             { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+        sign({ jti: uuid(), typ: 'Refresh', realm: state.props.realm },
+             state.cert,
+             { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
     ])
+    .then(tokens => ({
+        access_token: tokens[0],
+        id_token: tokens[1],
+        refresh_token: tokens[2]
+    }))
 
 const getCert = state =>
     state.actions.readFile(process.env.CERT, 'utf8')
         .then(set(lensProp('cert'), _, state))
 
-const addTokensToState = state => tokens =>
-    set(lensProp('token'), { access_token: tokens[0], id_token: tokens[1], refresh_token: tokens[2], token_type: 'Bearer' }, state)
+const addTokensToState = state =>
+    set(lensProp('token'), _, state)
 
 const addDebugLogs = state =>
     set(lensProp('logs'), state.logs.concat({ type: 'debug', message: `tokens successfully created for ${state.props.realm}.${state.props.username}.` }), state)

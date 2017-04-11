@@ -45,6 +45,9 @@ const getMockState = () =>
             client_id: 'client_id',
             username: 'username'
         },
+        user: {
+            roles: ['abc']
+        },
         actions: {
             readFile: () => Promise.resolve(privateKey)
         },
@@ -130,7 +133,7 @@ test('actions.createJwt returns refresh_token', t => {
 })
 
 test('actions.createJwt returns access_token', t => {
-    t.plan(5)
+    t.plan(6)
 
     const state = getMockState()
 
@@ -140,6 +143,7 @@ test('actions.createJwt returns access_token', t => {
                 .then(token => {
                     t.ok(token.iat, 'iat must exist')
                     t.ok(token.jti, 'token.jti must exist')
+                    t.equal(token.roles[0], state.user.roles[0], 'token.roles must match state.user.roles')
                     t.equal(token.aud, state.props.client_id, 'token.aud must match props.client_id')
                     t.equal(token.realm, state.props.realm, 'token.realm must match props.realm')
                     t.equal(token.sub, state.props.username, 'token.sub must match props.username')
