@@ -14,6 +14,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "coveralls": "^2.13.0",
     "istanbul": "^0.4.5",
     "keypair": "^1.0.1",
     "tap-spec": "^4.1.1",
@@ -21,7 +22,7 @@
   },
   "scripts": {
     "test": "STAGE=dev SLS_DEBUG=true TOKEN_EXPIRATION=5m REFRESH_TOKEN_EXPIRATION=30m CERT=./.secret/private.key tape tests/*.js tests/**/*.js | node_modules/.bin/tap-spec",
-    "coveralls": "STAGE=dev SLS_DEBUG=true TOKEN_EXPIRATION=5m REFRESH_TOKEN_EXPIRATION=30m CERT=./.secret/private.key istanbul cover tape tests/*.js tests/**/*.js | node_modules/.bin/tap-spec",
+    "coveralls": "cat coverage/lcov.info | coveralls",
     "debug": "serverless invoke local --function token --path event.json",
     "secret:generate": "node ./tools/generate-private-key.js"
   },
