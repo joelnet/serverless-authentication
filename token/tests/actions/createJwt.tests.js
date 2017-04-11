@@ -94,7 +94,7 @@ test('actions.createJwt returns debug log', t => {
 })
 
 test('actions.createJwt returns id_token', t => {
-    t.plan(4)
+    t.plan(5)
 
     const state = getMockState()
 
@@ -103,6 +103,7 @@ test('actions.createJwt returns id_token', t => {
             jwtVerify(state.token.id_token, publicKey)
                 .then(token => {
                     t.ok(token.iat, 'iat must exist')
+                    t.ok(token.jti, 'token.jti must exist')
                     t.equal(token.aud, state.props.client_id, 'token.aud must match props.client_id')
                     t.equal(token.realm, state.props.realm, 'token.realm must match props.realm')
                     t.equal(token.sub, state.props.username, 'token.sub must match props.username')
@@ -111,7 +112,7 @@ test('actions.createJwt returns id_token', t => {
 })
 
 test('actions.createJwt returns refresh_token', t => {
-    t.plan(4)
+    t.plan(5)
 
     const state = getMockState()
 
@@ -120,6 +121,7 @@ test('actions.createJwt returns refresh_token', t => {
             jwtVerify(state.token.refresh_token, publicKey)
                 .then(token => {
                     t.ok(token.iat, 'iat must exist')
+                    t.ok(token.jti, 'token.jti must exist')
                     t.equal(token.aud, state.props.client_id, 'token.aud must match props.client_id')
                     t.equal(token.realm, state.props.realm, 'token.realm must match props.realm')
                     t.equal(token.sub, state.props.username, 'token.sub must match props.username')
@@ -128,7 +130,7 @@ test('actions.createJwt returns refresh_token', t => {
 })
 
 test('actions.createJwt returns access_token', t => {
-    t.plan(4)
+    t.plan(5)
 
     const state = getMockState()
 
@@ -137,6 +139,7 @@ test('actions.createJwt returns access_token', t => {
             jwtVerify(state.token.access_token, publicKey)
                 .then(token => {
                     t.ok(token.iat, 'iat must exist')
+                    t.ok(token.jti, 'token.jti must exist')
                     t.equal(token.aud, state.props.client_id, 'token.aud must match props.client_id')
                     t.equal(token.realm, state.props.realm, 'token.realm must match props.realm')
                     t.equal(token.sub, state.props.username, 'token.sub must match props.username')

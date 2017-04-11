@@ -3,6 +3,7 @@ const sign      = promisify(require('jsonwebtoken').sign)
 const set       = require('ramda/src/set')
 const lensProp  = require('ramda/src/lensProp')
 const _         = require('ramda/src/__')
+const uuid      = require('uuid/v4')
 const pipeAsync = require('../lib/pipeAsync')
 
 const reject = (logs, state) =>
@@ -10,9 +11,9 @@ const reject = (logs, state) =>
 
 const generateTokens = state =>
     Promise.all([
-        sign({ realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
-        sign({ realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
-        sign({ realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
+        sign({ jti: uuid(), realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+        sign({ jti: uuid(), realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+        sign({ jti: uuid(), realm: state.props.realm }, state.cert, { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
     ])
 
 const getCert = state =>
