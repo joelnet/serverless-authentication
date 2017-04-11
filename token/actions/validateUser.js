@@ -1,11 +1,14 @@
 const promisify        = require('functional-js/promises/promisify')
 const validatePassword = promisify(require('bcrypt-nodejs').compare)
+const set              = require('ramda/src/set')
+const lensProp         = require('ramda/src/lensProp')
+const _                = require('ramda/src/__')
 const pipeAsync        = require('../lib/pipeAsync')
 
 const UNAUTHORIZED = { type: 'error', message: '[401] Unauthorized' }
 
 const reject = (logs, state) =>
-    Promise.reject(Object.assign({}, state, { logs: (state.logs||[]).concat(logs) }))
+    Promise.reject(set(lensProp('logs'), state.logs.concat(logs), state))
 
 const rejectIfNoUser = message => state =>
     state && state.user ? state : reject(message, state)

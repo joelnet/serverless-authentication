@@ -1,9 +1,10 @@
-const fs = require('fs')
-const promisify = require('functional-js/promises/promisify')
-const getUser = require('./storage').getUser
-const pipeAsync = require('../lib/pipeAsync')
-const validatedRequest = require('../requests/tokenRequest')
-const logging = require('./logging')
+const fs                 = require('fs')
+const promisify          = require('functional-js/promises/promisify')
+const merge              = require('ramda/src/merge')
+const getUser            = require('./storage').getUser
+const pipeAsync          = require('../lib/pipeAsync')
+const validatedRequest   = require('../requests/tokenRequest')
+const logging            = require('./logging')
 
 const createJwt = require('../actions/createJwt')
 const validateUser = require('../actions/validateUser')
@@ -29,7 +30,7 @@ const handleException = func => state =>
 module.exports = validatedRequest((request, dependencies) => {
     const state = {
         props: request,
-        actions: Object.assign({}, actions, dependencies),
+        actions: merge(actions, dependencies),
         logs: []
     }
 

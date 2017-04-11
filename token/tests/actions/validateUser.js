@@ -7,7 +7,8 @@ test('actions.validateUser with no user fails', t => {
     const state = {
         props: {
             password: 'password'
-        }
+        },
+        logs: []
     }
 
     validateUser(state)
@@ -28,7 +29,8 @@ test('actions.validateUser with bad password hash fails', t => {
         },
         user: {
             password: 'bad-password-hash'
-        }
+        },
+        logs: []
     }
 
     validateUser(state)

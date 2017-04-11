@@ -1,15 +1,15 @@
-const Joi = require('joi')
-const promisify = require('functional-js/promises/promisify')
-const get = require('../lib/get')
+const promisify   = require('functional-js/promises/promisify')
+const Joi         = require('joi')
 const joiValidate = promisify(Joi.validate)
+const path        = require('ramda/src/path')
 
 const getRequest = event => ({
-    grant_type: get(['grant_type'], event),
-    realm: get(['path', 'realm'], event),
-    client_id: get(['client_id'], event),
-    username: get(['username'], event),
-    password: get(['password'], event),
-    refresh_token: get(['refresh_token'], event)
+    grant_type: path(['grant_type'], event),
+    realm: path(['path', 'realm'], event),
+    client_id: path(['client_id'], event),
+    username: path(['username'], event),
+    password: path(['password'], event),
+    refresh_token: path(['refresh_token'], event)
 })
 
 const schema = Joi.object().keys({
@@ -26,6 +26,6 @@ module.exports = func =>
         return Promise.resolve(event)
             .then(getRequest)
             .then(request => joiValidate(request, schema))
-            .catch(err => Promise.reject(get(['details', 0, 'message'], err)))
+            .catch(err => Promise.reject(path(['details', 0, 'message'], err)))
             .then(request => func.apply(null, [request].concat(Array.prototype.slice.call(arguments, 1))))
     }

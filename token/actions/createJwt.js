@@ -1,9 +1,12 @@
 const promisify = require('functional-js/promises/promisify')
 const sign      = promisify(require('jsonwebtoken').sign)
+const set       = require('ramda/src/set')
+const lensProp  = require('ramda/src/lensProp')
+const _         = require('ramda/src/__')
 const pipeAsync = require('../lib/pipeAsync')
 
 const reject = (logs, state) =>
-    Promise.reject(Object.assign({}, state, { logs: (state.logs||[]).concat(logs) }))
+    Promise.reject(set(lensProp('logs'), state.logs.concat(logs), state))
 
 const generateTokens = state =>
     Promise.all([
@@ -13,13 +16,13 @@ const generateTokens = state =>
 
 const getCert = state =>
     state.actions.readFile(process.env.CERT, 'utf8')
-        .then(cert => Object.assign({}, state, { cert }))
+        .then(set(lensProp('cert'), _, state))
 
 const addTokensToState = state => tokens =>
-    Object.assign({}, state, { token: { id_token: tokens[0], refresh_token: tokens[1], token_type: 'Bearer' } })
+    set(lensProp('token'), { id_token: tokens[0], refresh_token: tokens[1], token_type: 'Bearer' }, state)
 
 const addDebugMessages = state =>
-    Object.assign({}, state, { logs: (state.logs||[]).concat({ type: 'debug', message: `tokens successfully created for ${state.props.realm}.${state.props.username}.` }) })
+    set(lensProp('logs'), state.logs.concat({ type: 'debug', message: `tokens successfully created for ${state.props.realm}.${state.props.username}.` }), state)
 
 const createJwt = state =>
     pipeAsync(
