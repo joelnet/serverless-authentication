@@ -12,6 +12,7 @@ const docClient = new AWS.DynamoDB.DocumentClient({
 const docClientQuery =
     promisify(docClient.query).bind(docClient)
 
+/* istanbul ignore next */
 const query = (table, condition, filter, values) =>
     docClientQuery({
         TableName: table,
@@ -23,6 +24,7 @@ const query = (table, condition, filter, values) =>
 const getFirst =
     path(['Items', 0])
 
+/* istanbul ignore next */
 module.exports.getUser = (realm, userId) =>
     Promise.resolve()
         .then(() => query(USERS, 'userId = :userId', 'realm = :realm', { ':userId': userId, ':realm': realm }))
