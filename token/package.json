@@ -4,7 +4,7 @@
   "description": "",
   "main": "handler.js",
   "dependencies": {
-    "aws-sdk": "^2.37.0",
+    "aws-sdk": "^2.41.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
     "functional-js": "git+https://github.com/joelnet/functional-js.git",
