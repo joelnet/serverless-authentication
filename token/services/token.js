@@ -25,11 +25,8 @@ const handleException = func => state =>
         .catch(state => {
             const errors = propOr([], 'logs', state).filter(log => log.type === 'error')
 
-            console.log('or', pathOr('[500] Unknown Error', [0, 'message'], errors))
-
             return Promise.reject(
                 pathOr('[500] Unknown Error', [0, 'message'], errors)
-                //errors.length ? errors[0].message : '[500] Unknown Error'
             )
         })
 
