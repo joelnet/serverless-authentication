@@ -1,12 +1,13 @@
 const AWS       = require('aws-sdk')
+const config    = require('config')
 const promisify = require('functional-js/promises/promisify')
 const path      = require('ramda/src/path')
 
 const USERS = `social-${process.env.STAGE}-users`
 
 const docClient = new AWS.DynamoDB.DocumentClient({
-        region: process.env.REGION,
-        apiVersion: process.env.APIVERSION
+        region: config.get('aws.region'),
+        apiVersion: config.get('aws.apiversion')
     })
 
 const docClientQuery =

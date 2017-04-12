@@ -7,6 +7,7 @@
     "aws-sdk": "^2.41.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
+    "config": "^1.25.1",
     "functional-js": "git+https://github.com/joelnet/functional-js.git",
     "joi": "^10.4.1",
     "jsonwebtoken": "^7.3.0",
@@ -21,11 +22,11 @@
     "tape": "^4.6.3"
   },
   "scripts": {
-    "test": "STAGE=dev SLS_DEBUG=true TOKEN_EXPIRATION=5m REFRESH_TOKEN_EXPIRATION=30m CERT=./.secret/private.key istanbul cover tape tests/*.js tests/**/*.js | node_modules/.bin/tap-spec",
+    "test": "STAGE=dev SLS_DEBUG=true istanbul cover tape tests/*.js tests/**/*.js | tap-spec",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "debug": "serverless invoke local --function token --path event.json",
     "secret:generate": "node ./tools/generate-private-key.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }

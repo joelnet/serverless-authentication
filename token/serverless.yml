@@ -21,13 +21,8 @@ provider:
   name: aws
   runtime: nodejs4.3
   environment:
-    REGION: us-west-2
-    APIVERSION: 2012-08-10
     STAGE: dev
-    CERT: ./.secret/private.key
     TOKEN_ALGORITHM: RS256
-    TOKEN_EXPIRATION: 15m
-    REFRESH_TOKEN_EXPIRATION: 30d
 
 # you can overwrite defaults here
 #  stage: dev

@@ -1,3 +1,4 @@
+const config    = require('config')
 const promisify = require('functional-js/promises/promisify')
 const sign      = promisify(require('jsonwebtoken').sign)
 const _         = require('ramda/src/__')
@@ -14,13 +15,13 @@ const generateTokens = state =>
     Promise.all([
         sign({ jti: uuid(), typ: 'Bearer', realm: state.props.realm, roles: pathOr([], ['user', 'roles'], state) },
              state.cert,
-            { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+            { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: config.get('token.tokenExpiration') }),
         sign({ jti: uuid(), typ: 'ID', realm: state.props.realm, preferred_username: state.props.username },
              state.cert,
-             { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.TOKEN_EXPIRATION }),
+             { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: config.get('token.tokenExpiration') }),
         sign({ jti: uuid(), typ: 'Refresh', realm: state.props.realm },
              state.cert,
-             { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION })
+             { audience: state.props.client_id, subject: state.props.username, algorithm: 'RS256', expiresIn: config.get('token.refreshTokenExpiration') })
     ])
     .then(tokens => ({
         access_token: tokens[0],
@@ -29,7 +30,7 @@ const generateTokens = state =>
     }))
 
 const getCert = state =>
-    state.actions.readFile(process.env.CERT, 'utf8')
+    state.actions.readFile(config.get('token.cert'), 'utf8')
         .then(set(lensProp('cert'), _, state))
 
 const addTokensToState = state =>

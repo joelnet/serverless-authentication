@@ -1,0 +1,11 @@
+{
+    "aws": {
+        "region": "us-west-2",
+        "apiversion": "2012-08-10"
+    },
+    "token": {
+        "tokenExpiration": "5m",
+        "refreshTokenExpiration": "30m",
+        "cert": "./.secret/private.key"
+    }
+}
