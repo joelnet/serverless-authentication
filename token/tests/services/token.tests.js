@@ -147,7 +147,6 @@ test('services/token [password] with valid password succeeds', t => {
 
     token(request, mocks)
         .then(token => t.ok(token))
-        .catch(err => t.equal(err, ''))
 })
 
 test('services/token [password] with db error fails', t => {
@@ -245,17 +244,17 @@ test('services/token [refresh_token] with password fails', t => {
         .catch(err => t.equal(err, '"password" is not allowed', '"password" is not allowed'))
 })
 
-// // test('services/token [refresh_token] return success', t => {
-// //     t.plan(1)
+// test('services/token [refresh_token] return success', t => {
+//     t.plan(1)
 
-// //     const request = {
-// //             path: { realm: 'realm' },
-// //             grant_type: 'refresh_token',
-// //             client_id: 'client_id',
-// //             refresh_token: 'refresh_token'
-// //         }
-// //     const mocks = { getUser: () => Promise.resolve(null) }
+//     const request = {
+//             path: { realm: 'realm' },
+//             grant_type: 'refresh_token',
+//             client_id: 'client_id',
+//             refresh_token: 'refresh_token'
+//         }
+//     const mocks = { getUser: () => Promise.resolve(null) }
 
-// //     token(request, mocks)
-// //         .catch(err => t.equal(err, 'TODO: write code', 'should not have error'))
-// // })
+//     token(request, mocks)
+//         .catch(err => t.equal(err, 'TODO: write code', 'should not have error'))
+// })
