@@ -3,6 +3,7 @@ const promisify          = require('functional-js/promises/promisify')
 const merge              = require('ramda/src/merge')
 const pathOr             = require('ramda/src/pathOr')
 const propOr             = require('ramda/src/propOr')
+const propEq             = require('ramda/src/propEq')
 const defaultTo          = require('ramda/src/defaultTo')
 const getUser            = require('./storage').getUser
 const pipeAsync          = require('../lib/pipeAsync')
@@ -11,6 +12,7 @@ const logging            = require('./logging')
 
 const createJwt = require('../actions/createJwt')
 const validateUser = require('../actions/validateUser')
+const tokenValidationStrategy = require('../actions/validateToken')
 const getUserFromStorage = require('../actions/getUserFromStorage')
 const writeLogs = state => state.actions.writeLogs(state)
 
@@ -20,10 +22,18 @@ const actions = {
     writeLogs: logging
 }
 
+const userValidationStrategy =
+    pipeAsync(getUserFromStorage, validateUser)
+
+const tokenStrategy = state =>
+    state.props.grant_type === 'password'
+        ? userValidationStrategy(state)
+        : tokenValidationStrategy(state)
+
 const handleException = func => state =>
     func(state)
         .catch(state => {
-            const errors = propOr([], 'logs', state).filter(log => log.type === 'error')
+            const errors = propOr([], 'logs', state).filter(propEq('type', 'error'))
 
             return Promise.reject(
                 pathOr('[500] Unknown Error', [0, 'message'], errors)
@@ -38,8 +48,7 @@ module.exports = validatedRequest((request, dependencies) => {
     }
 
     return handleException(pipeAsync(
-        getUserFromStorage,
-        validateUser,
+        tokenStrategy,
         writeLogs,
         createJwt,
         state => state.token
