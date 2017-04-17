@@ -1,7 +1,7 @@
 const config = require('config')
 const test = require('tape')
-const getPrivateKey = require('../../lib/getKeys').getPrivateKey
-const getPublicKey = require('../../lib/getKeys').getPublicKey
+const getPrivateKey = require('../lib/getKeys').getPrivateKey
+const getPublicKey = require('../lib/getKeys').getPublicKey
 
 test('lib.getKeys.getPublicKey returns public key', t => {
     t.plan(1)

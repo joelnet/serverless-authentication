@@ -1,4 +1,4 @@
-const config    = require('config')
+const config = require('config')
 
 module.exports.getPrivateKey = readFile =>
     readFile(config.get('certs.privateKey'), 'utf8')

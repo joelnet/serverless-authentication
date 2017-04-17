@@ -1,16 +1,10 @@
 const config        = require('config')
 const promisify     = require('functional-js/promises/promisify')
 const sign          = promisify(require('jsonwebtoken').sign)
-const _             = require('ramda/src/__')
-const set           = require('ramda/src/set')
-const lensProp      = require('ramda/src/lensProp')
 const pathOr        = require('ramda/src/pathOr')
 const uuid          = require('uuid/v4')
-const pipeAsync     = require('../lib/pipeAsync')
 const getPrivateKey = require('../lib/getKeys') .getPrivateKey
-
-const reject = (logs, state) =>
-    Promise.reject(set(lensProp('logs'), state.logs.concat(logs), state))
+const pipeAsync     = require('../lib/pipeAsync')
 
 const generateTokensWithCert = state => cert =>
     Promise.all([
@@ -30,29 +24,8 @@ const generateTokensWithCert = state => cert =>
         refresh_token: tokens[2]
     }))
 
-const addTokensToState = state =>
-    set(lensProp('token'), _, state)
-
-const addDebugLogs = state =>
-    set(lensProp('logs'), state.logs.concat({ type: 'debug', message: `tokens successfully created for ${state.props.realm}.${state.props.username}.` }), state)
-
-const generateTokens = state =>
-    getPrivateKey(state.actions.readFile)
-        .then(generateTokensWithCert(state))
-
-const createJwt = state =>
+module.exports = (getToken, state) =>
     pipeAsync(
-        generateTokens,
-        addTokensToState(state),
-        addDebugLogs
+        getToken,
+        generateTokensWithCert(state)
     )(state)
-
-const handleException = func => state =>
-    func(state)
-        .catch(message => reject([
-            { type: 'error', message: '[500] Internal Server Error' },
-            { type: 'debug', message }
-        ], state))
-
-module.exports =
-    handleException(createJwt)

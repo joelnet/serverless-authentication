@@ -22,7 +22,7 @@
     "tape": "^4.6.3"
   },
   "scripts": {
-    "test": "STAGE=dev SLS_DEBUG=true istanbul cover tape tests/*.js tests/**/*.js | tap-spec",
+    "test": "STAGE=dev SLS_DEBUG=true istanbul cover tape test/*test.js | tap-spec",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "debug": "serverless invoke local --function token --path event.json",
     "secret:generate": "node ./tools/generate-private-key.js"

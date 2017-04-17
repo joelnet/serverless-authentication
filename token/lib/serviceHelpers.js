@@ -1,5 +1,5 @@
-const SUCCESS = require('../statusCodes').SUCCESS
-const BAD_REQUEST = require('../statusCodes').BAD_REQUEST
+const SUCCESS = 200
+const BAD_REQUEST = 400
 
 const response = (status, body) =>
     ({ status, body: JSON.stringify(body) })
@@ -21,7 +21,5 @@ const withJsonResponse = func => x =>
         .catch(failResponse)
 
 module.exports = {
-    failResponse,
-    successResponse,
-    withJsonResponse
+    withJsonResponse,
 }
