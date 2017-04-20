@@ -1,5 +1,5 @@
 const test = require('tape')
-const validate = require('../../requests/tokenRequest')
+const validate = require('../requests/tokenRequest')
 
 test('requests/tokenRequest with no object returns grant_type error', t => {
     t.plan(1)

@@ -2,6 +2,10 @@ const promisify   = require('functional-js/promises/promisify')
 const Joi         = require('joi')
 const joiValidate = promisify(Joi.validate)
 const path        = require('ramda/src/path')
+const pathOr      = require('ramda/src/pathOr')
+const concat      = require('ramda/src/concat')
+const tail        = require('ramda/src/tail')
+const pipeAsync   = require('../lib/pipeAsync')
 
 const getRequest = event => ({
     grant_type: path(['grant_type'], event),
@@ -21,11 +25,15 @@ const schema = Joi.object().keys({
     refresh_token: Joi.any().when('grant_type', { is: 'refresh_token', then: Joi.required(), otherwise: Joi.forbidden() })
 })
 
+const validate = (request, schema) =>
+    joiValidate(request, schema)
+        .catch(err => Promise.reject(pathOr(err, ['details', 0, 'message'], err)))
+
 module.exports = func =>
     function(event) {
-        return Promise.resolve(event)
-            .then(getRequest)
-            .then(request => joiValidate(request, schema))
-            .catch(err => Promise.reject(path(['details', 0, 'message'], err)))
-            .then(request => func.apply(null, [request].concat(Array.prototype.slice.call(arguments, 1))))
+        return pipeAsync(
+            getRequest,
+            request => validate(request, schema),
+            request => func.apply(null, concat([request], tail(arguments)))
+        )(event)
     }

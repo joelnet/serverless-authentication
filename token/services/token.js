@@ -1,18 +1,13 @@
-const fs                 = require('fs')
-const promisify          = require('functional-js/promises/promisify')
-const merge              = require('ramda/src/merge')
-const pathOr             = require('ramda/src/pathOr')
-const propOr             = require('ramda/src/propOr')
-const defaultTo          = require('ramda/src/defaultTo')
-const getUser            = require('./storage').getUser
-const pipeAsync          = require('../lib/pipeAsync')
-const validatedRequest   = require('../requests/tokenRequest')
-const logging            = require('./logging')
-
-const createJwt = require('../actions/createJwt')
-const validateUser = require('../actions/validateUser')
-const getUserFromStorage = require('../actions/getUserFromStorage')
-const writeLogs = state => state.actions.writeLogs(state)
+const fs               = require('fs')
+const promisify        = require('functional-js/promises/promisify')
+const merge            = require('ramda/src/merge')
+const prop             = require('ramda/src/prop')
+const getUser          = require('./storage').getUser
+const pipeAsync        = require('../lib/pipeAsync')
+const validatedRequest = require('../requests/tokenRequest')
+const logging          = require('./logging')
+const strategies       = require('../strategies')
+const exceptionMapper  = require('../lib/exceptionMapper')
 
 const actions = {
     getUser,
@@ -20,15 +15,20 @@ const actions = {
     writeLogs: logging
 }
 
+const runTokenStrategy = state =>
+    strategies
+        .find(o => o.test(state))
+        .run(state)
+
+const writeLogs = state =>
+    state.actions.writeLogs(state)
+
+const reject = func => x =>
+    Promise.reject(func(x))
+
 const handleException = func => state =>
     func(state)
-        .catch(state => {
-            const errors = propOr([], 'logs', state).filter(log => log.type === 'error')
-
-            return Promise.reject(
-                pathOr('[500] Unknown Error', [0, 'message'], errors)
-            )
-        })
+        .catch(reject(exceptionMapper))
 
 module.exports = validatedRequest((request, dependencies) => {
     const state = {
@@ -38,10 +38,8 @@ module.exports = validatedRequest((request, dependencies) => {
     }
 
     return handleException(pipeAsync(
-        getUserFromStorage,
-        validateUser,
+        runTokenStrategy,
         writeLogs,
-        createJwt,
-        state => state.token
+        prop('token')
     ))(state)
 })

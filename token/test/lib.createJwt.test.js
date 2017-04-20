@@ -1,8 +1,9 @@
 const test = require('tape')
-const createJwt = require('../../actions/createJwt')
 const jwt = require('jsonwebtoken')
 const promisify = require('functional-js/promises/promisify')
 const jwtVerify = promisify(jwt.verify)
+
+const createJwt = require('../lib/createJwt')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
@@ -48,51 +49,18 @@ const getMockState = () =>
         user: {
             roles: ['abc']
         },
-        actions: {
-            readFile: () => Promise.resolve(privateKey)
-        },
         logs: []
     })
 
 test('actions.createJwt with invalid cert returns state with errors ', t => {
-    t.plan(4)
+    t.plan(1)
 
     const state = getMockState()
-    state.actions.readFile = () => Promise.resolve('invalid cert')
+    const readFile = () => Promise.resolve('invalid cert')
 
-    createJwt(state)
+    createJwt(readFile, state)
         .catch(err => {
-            t.equal(err.logs.length, 2, 'state.logs should contain 2 logs')
-            t.true(err.logs.filter(x => x.type === 'error').length, 'state.logs should contain type error')
-            t.true(err.logs.filter(x => x.type === 'debug').length, 'state.logs should contain type debug')
-            t.true(err.logs[0].message.indexOf('[500] Internal Server Error') > -1, '[500] Internal Server Error')
-        })
-})
-
-test('actions.createJwt with state returns state with errors ', t => {
-    t.plan(4)
-
-    const state = getMockState()
-    state.actions = undefined
-
-    createJwt(state)
-        .catch(err => {
-            t.equal(err.logs.length, 2, 'state.logs must have 2 log')
-            t.true(err.logs.filter(x => x.type === 'error').length, 'state.logs should contain type error')
-            t.true(err.logs.filter(x => x.type === 'debug').length, 'state.logs should contain type debug')
-            t.true(err.logs[0].message.indexOf('[500] Internal Server Error') > -1, '[500] Internal Server Error')
-        })
-})
-
-test('actions.createJwt returns debug log', t => {
-    t.plan(2)
-
-    const state = getMockState()
-
-    createJwt(state)
-        .then(state => {
-            t.equal(state.logs.length, 1, 'state.logs must have 1 log')
-            t.equal(state.logs[0].type, 'debug', 'state.logs[0] should be of type debug')
+            t.equal(err.toString(), 'Error: error:0906D06C:PEM routines:PEM_read_bio:no start line')
         })
 })
 
@@ -100,10 +68,11 @@ test('actions.createJwt returns id_token', t => {
     t.plan(5)
 
     const state = getMockState()
+    const readFile = () => Promise.resolve(privateKey)
 
-    createJwt(state)
-        .then(state => {
-            jwtVerify(state.token.id_token, publicKey)
+    createJwt(readFile, state)
+        .then(token => {
+            jwtVerify(token.id_token, publicKey)
                 .then(token => {
                     t.ok(token.iat, 'iat must exist')
                     t.ok(token.jti, 'token.jti must exist')
@@ -118,10 +87,11 @@ test('actions.createJwt returns refresh_token', t => {
     t.plan(5)
 
     const state = getMockState()
+    const readFile = () => Promise.resolve(privateKey)
 
-    createJwt(state)
-        .then(state => {
-            jwtVerify(state.token.refresh_token, publicKey)
+    createJwt(readFile, state)
+        .then(token => {
+            jwtVerify(token.refresh_token, publicKey)
                 .then(token => {
                     t.ok(token.iat, 'iat must exist')
                     t.ok(token.jti, 'token.jti must exist')
@@ -136,10 +106,11 @@ test('actions.createJwt returns access_token', t => {
     t.plan(6)
 
     const state = getMockState()
+    const readFile = () => Promise.resolve(privateKey)
 
-    createJwt(state)
-        .then(state => {
-            jwtVerify(state.token.access_token, publicKey)
+    createJwt(readFile, state)
+        .then(token => {
+            jwtVerify(token.access_token, publicKey)
                 .then(token => {
                     t.ok(token.iat, 'iat must exist')
                     t.ok(token.jti, 'token.jti must exist')

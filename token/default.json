@@ -1,7 +1,0 @@
-{
-    "token": {
-        "tokenExpiration": "5m",
-        "refreshTokenExpiration": "30m",
-        "cert": "./.secret/private.key"
-    }
-}

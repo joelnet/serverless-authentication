@@ -1,5 +1,6 @@
+const config = require('config')
 const test = require('tape')
-const token = require('../../services/token')
+const token = require('../services/token')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
@@ -27,11 +28,28 @@ aal6vZl6aPUXk0vxlHWEM6VHGBHz7LQgWZ1b3DA8WNKqEQKBgQDPnXNz8O+SPPaGc92bRNQW
 0IIkAA==
 -----END RSA PRIVATE KEY-----`
 
+const publicKey = `-----BEGIN RSA PUBLIC KEY-----
+MIIBCgKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBxcHp/
+NgBlbuvdrdD8/Ym3CYwNiqC7CETztkXPRI4hWG2Z/eYZ4D9GKnxFviAAJ4TNr7esWjN7s12w
+noD4KM5I9agKHobMGMPbiifOeYtgj2mVrkqlowlgw/WnpcPjXCnEXt6fns3LRPpsmruIuCX3
+G4P9Sv+D3BK/RWSjXtfohmTLdo7mfg9fDJAv3I9N93kD1zZXanpQJE5UjmuUzpMtHW202rxi
+b5Y412Ds0qKC5AtgfM9BTUIaz9KVP2Y9YXgM6QdOL2zgNJHJUE7sUIw36fJ258FM2wIDAQAB
+-----END RSA PUBLIC KEY-----`
+
+const foreverRefreshToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1NmU1Njk0ZS1mMjViLTQ1MTEtOTM1Zi1mOGM2MzY2NmU3MGYiLCJ0eXAiOiJSZWZyZXNoIiwicmVhbG0iOiJ0ZXN0IiwiaWF0IjoxNDkxOTg1NDEyLCJhdWQiOiJkZWZhdWx0Iiwic3ViIjoidGVzdEB0ZXN0LmNvbSJ9.Gw-y4n9oI6qoCmGzH_vfRT2y94_kuGpADzerSLnyefBkfoNL_DNZ6TeSvsYZ0HlPcIGRW6FE4J6-6K9UXEjxBtSqPmi0sjQ8n1W9yUjJsgvqgf_gajh7Vw0xsE9hpOpKJIvOeVrcQSiKLGXTMYS6_Jk5Jj4pc48e58X3Zc39wqafEvSwZPRGihSmL7B-jrcC7J6X254XgtYS5AyR3ki5d5zvZ-0lHATv-W_DT7n9IrNDrL_iig6HP5nWbm1tdSn0MmJKVMs5BHcx7lRGLjvoIQzni0b6hMxDBxChQTyv8eD4nzh99F5fI7sWKXqirwIjyLFevatt2ujcQVvEUPCA6Q'
+
 const getUser = () => ({
     password: '$2a$10$wPxFuUCZ1bv3XU0jw.EPceArhxw1lFbX8n/qW0c.z6cFcANZF1IHy'
 })
 
-test('services/token with no grant_type fails', t => {
+const readFile = file =>
+    file === config.get('certs.privateKey') ? Promise.resolve(privateKey)
+  : file === config.get('certs.publicKey')  ? Promise.resolve(publicKey)
+                                            : Promise.reject('invalid file')
+
+const writeLogs = state => Promise.resolve(state)
+
+test('services.token with no grant_type fails', t => {
     t.plan(1)
 
     const request = undefined
@@ -41,7 +59,7 @@ test('services/token with no grant_type fails', t => {
         .catch(err => t.equal(err, '"grant_type" is required', '"grant_type" is required'))
 })
 
-test('services/token with invalid grant_type fails', t => {
+test('services.token with invalid grant_type fails', t => {
     t.plan(1)
 
     const request = {
@@ -53,7 +71,7 @@ test('services/token with invalid grant_type fails', t => {
         .catch(err => t.equal(err, '"grant_type" must be one of [password, refresh_token]', '"grant_type" must be one of [password, refresh_token]'))
 })
 
-test('services/token with no client_id fails', t => {
+test('services.token with no client_id fails', t => {
     t.plan(1)
     
     const request = {
@@ -66,7 +84,7 @@ test('services/token with no client_id fails', t => {
         .catch(err => t.equal(err, '"client_id" is required', '"client_id" is required'))
 })
 
-test('services/token [password] with no username fails', t => {
+test('services.token [password] with no username fails', t => {
     t.plan(1)
     
     const request = {
@@ -80,7 +98,7 @@ test('services/token [password] with no username fails', t => {
         .catch(err => t.equal(err, '"username" is required', '"username" is required'))
 })
 
-test('services/token [password] with no password fails', t => {
+test('services.token [password] with no password fails', t => {
     t.plan(1)
     
     const request = {
@@ -95,7 +113,7 @@ test('services/token [password] with no password fails', t => {
         .catch(err => t.equal(err, '"password" is required', '"password" is required'))
 })
 
-test('services/token [password] with invalid password fails', t => {
+test('services.token [password] with invalid password fails', t => {
     t.plan(1)
 
     const request = {
@@ -114,7 +132,7 @@ test('services/token [password] with invalid password fails', t => {
         .catch(err => t.equal(err, '[401] Unauthorized', '[401] Unauthorized'))
 })
 
-test('services/token [password] with no user fails', t => {
+test('services.token [password] with no user fails', t => {
     t.plan(1)
 
     const request = {
@@ -130,7 +148,7 @@ test('services/token [password] with no user fails', t => {
         .catch(err => t.equal(err, '[401] Unauthorized', '[401] Unauthorized'))
 })
 
-test('services/token [password] with valid password succeeds', t => {
+test('services.token [password] with valid password succeeds', t => {
     t.plan(1)
 
     const request = {
@@ -149,7 +167,7 @@ test('services/token [password] with valid password succeeds', t => {
         .then(token => t.ok(token))
 })
 
-test('services/token [password] with db error fails', t => {
+test('services.token [password] with db error fails', t => {
     t.plan(1)
 
     const request = {
@@ -165,7 +183,7 @@ test('services/token [password] with db error fails', t => {
         .catch(err => t.equal(err, '[500] Unknown Error', '[500] Unknown Error'))
 })
 
-test('services/token [password] with no user fails', t => {
+test('services.token [password] with no user fails', t => {
     t.plan(1)
 
     const request = {
@@ -181,7 +199,7 @@ test('services/token [password] with no user fails', t => {
         .catch(err => t.equal(err, '[401] Unauthorized', '[401] Unauthorized'))
 })
 
-test('services/token [password] with refresh_token fails', t => {
+test('services.token [password] with refresh_token fails', t => {
     t.plan(1)
 
     const request = {
@@ -198,7 +216,7 @@ test('services/token [password] with refresh_token fails', t => {
         .catch(err => t.equal(err, '"refresh_token" is not allowed', '"refresh_token" is not allowed'))
 })
 
-test('services/token [refresh_token] with no refresh_token fails', t => {
+test('services.token [refresh_token] with no refresh_token fails', t => {
     t.plan(1)
 
     const request = {
@@ -212,7 +230,7 @@ test('services/token [refresh_token] with no refresh_token fails', t => {
         .catch(err => t.equal(err, '"refresh_token" is required', '"refresh_token" is required'))
 })
 
-test('services/token [refresh_token] with username fails', t => {
+test('services.token [refresh_token] with username fails', t => {
     t.plan(1)
 
     const request = {
@@ -228,7 +246,7 @@ test('services/token [refresh_token] with username fails', t => {
         .catch(err => t.equal(err, '"username" is not allowed', '"username" is not allowed'))
 })
 
-test('services/token [refresh_token] with password fails', t => {
+test('services.token [refresh_token] with password fails', t => {
     t.plan(1)
 
     const request = {
@@ -244,17 +262,38 @@ test('services/token [refresh_token] with password fails', t => {
         .catch(err => t.equal(err, '"password" is not allowed', '"password" is not allowed'))
 })
 
-// test('services/token [refresh_token] return success', t => {
-//     t.plan(1)
+test('services.token [refresh_token] with invalid token fails', t => {
+    t.plan(1)
 
-//     const request = {
-//             path: { realm: 'realm' },
-//             grant_type: 'refresh_token',
-//             client_id: 'client_id',
-//             refresh_token: 'refresh_token'
-//         }
-//     const mocks = { getUser: () => Promise.resolve(null) }
+    const request = {
+            path: { realm: 'realm' },
+            grant_type: 'refresh_token',
+            client_id: 'client_id',
+            refresh_token: 'refresh_token'
+        }
+    const mocks = {
+        readFile
+    }
 
-//     token(request, mocks)
-//         .catch(err => t.equal(err, 'TODO: write code', 'should not have error'))
-// })
+    token(request, mocks)
+        .catch(err => t.equal(err, '[400] Bad Request', '[400] Bad Request'))
+})
+
+test('services.token [refresh_token] with valid token succeeds', t => {
+    t.plan(1)
+
+    const request = {
+            path: { realm: 'realm' },
+            grant_type: 'refresh_token',
+            client_id: 'client_id',
+            refresh_token: foreverRefreshToken,
+        }
+    const mocks = {
+        readFile, writeLogs
+    }
+
+    token(request, mocks)
+        .then(token => {
+            t.ok(token.access_token)
+        })
+})

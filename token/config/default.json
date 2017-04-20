@@ -5,7 +5,10 @@
     },
     "token": {
         "tokenExpiration": "5m",
-        "refreshTokenExpiration": "30m",
-        "cert": "./.secret/private.key"
+        "refreshTokenExpiration": "30m"
+    },
+    "certs": {
+        "privateKey": "./.secret/private.key",
+        "publicKey": "./.secret/public.key"
     }
 }
