@@ -15,6 +15,12 @@ const actions = {
     writeLogs: logging
 }
 
+const getInitialState = (request, actions, dependencies) => ({
+    props: request,
+    actions: merge(actions, dependencies),
+    logs: []
+})
+
 const runTokenStrategy = state =>
     strategies
         .find(o => o.test(state))
@@ -30,16 +36,9 @@ const handleException = func => state =>
     func(state)
         .catch(reject(exceptionMapper))
 
-module.exports = validatedRequest((request, dependencies) => {
-    const state = {
-        props: request,
-        actions: merge(actions, dependencies),
-        logs: []
-    }
-
-    return handleException(pipeAsync(
+module.exports = validatedRequest((request, dependencies) =>
+    handleException(pipeAsync(
         runTokenStrategy,
         writeLogs,
         prop('token')
-    ))(state)
-})
+    ))(getInitialState(request, actions, dependencies)))
