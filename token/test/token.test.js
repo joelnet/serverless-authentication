@@ -1,6 +1,6 @@
 const config = require('config')
 const test = require('tape')
-const token = require('../services/token')
+const token = require('../token')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
