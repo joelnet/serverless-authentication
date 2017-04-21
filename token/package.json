@@ -24,7 +24,8 @@
   "scripts": {
     "test": "STAGE=dev SLS_DEBUG=true istanbul cover tape test/*test.js | tap-spec",
     "coveralls": "cat coverage/lcov.info | coveralls",
-    "debug": "serverless invoke local --function token --path event.json",
+    "invoke:tokenPassword": "serverless invoke local --function token --path events/tokenPasswordEvent.json",
+    "invoke:tokenRefresh": "serverless invoke local --function token --path events/tokenRefreshEvent.json",
     "secret:generate": "node ./tools/generate-private-key.js"
   },
   "author": "",
