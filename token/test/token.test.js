@@ -1,6 +1,7 @@
 const config = require('config')
 const test   = require('tape')
 const token  = require('../token')
+const path   = require('ramda/src/path')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
@@ -52,7 +53,7 @@ const writeLogs = state => Promise.resolve(state)
 test('services.token with no grant_type fails', t => {
     t.plan(1)
 
-    const request = undefined
+    const request = {}
     const mocks = { getUser: () => Promise.resolve(null) }
     
     token(request, mocks)
@@ -295,5 +296,27 @@ test('services.token [refresh_token] with valid token succeeds', t => {
     token(request, mocks)
         .then(token => {
             t.ok(token.access_token)
+        })
+})
+
+test('services.token with redirect_uri redirects', t => {
+    t.plan(3)
+
+    const request = {
+            path: { realm: 'realm' },
+            grant_type: 'refresh_token',
+            client_id: 'client_id',
+            refresh_token: foreverRefreshToken,
+            redirect_uri: 'http://mock-redirect-uri.com/page'
+        }
+    const mocks = {
+        readFile, writeLogs
+    }
+
+    token(request, mocks)
+        .then(response => {
+            t.equal(response.statusCode, 302, 'statusCode must be 302')
+            t.equal(path(['headers', 'Location'], response), request.redirect_uri, 'Location must equal redirect_uri'),
+            t.equal(response.body, '', 'body must equal ""')
         })
 })

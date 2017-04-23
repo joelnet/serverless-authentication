@@ -6,6 +6,7 @@ const getUser          = require('./services/storage').getUser
 const logging          = require('./services/logging')
 const pipeAsync        = require('./lib/pipeAsync')
 const exceptionMapper  = require('./lib/exceptionMapper')
+const redirectResponse = require('./lib/serviceHelpers').redirectResponse
 const validatedRequest = require('./requests/tokenRequest')
 const strategies       = require('./strategies')
 
@@ -36,9 +37,14 @@ const handleException = func => state =>
     func(state)
         .catch(reject(exceptionMapper))
 
+const redirectOrToken = request => state =>
+    request.redirect_uri
+        ? redirectResponse(request.redirect_uri)
+        : prop('token', state)
+
 module.exports = validatedRequest((request, dependencies) =>
     handleException(pipeAsync(
         runTokenStrategy,
         writeLogs,
-        prop('token')
+        redirectOrToken(request)
     ))(getInitialState(request, actions, dependencies)))

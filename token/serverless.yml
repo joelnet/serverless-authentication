@@ -59,6 +59,7 @@ functions:
       - http:
           path: auth/{realm}/token
           method: post
+          cors: true
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
 #      - sns: greeter-topic

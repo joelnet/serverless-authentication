@@ -9,6 +9,7 @@
     "bluebird": "^3.5.0",
     "config": "^1.25.1",
     "functional-js": "git+https://github.com/joelnet/functional-js.git",
+    "http-status": "^1.0.1",
     "joi": "^10.4.1",
     "jsonwebtoken": "^7.3.0",
     "ramda": "^0.23.0",
@@ -17,15 +18,18 @@
   "devDependencies": {
     "coveralls": "^2.13.0",
     "istanbul": "^0.4.5",
+    "jest": "^19.0.2",
     "keypair": "^1.0.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
   },
   "scripts": {
-    "test": "STAGE=dev SLS_DEBUG=true istanbul cover tape test/*test.js | tap-spec",
+    "test": "STAGE=dev istanbul cover tape test/*test.js | tap-spec",
+    "jest": "STAGE=dev jest",
+    "coverage:view": "xdg-open coverage/lcov-report/index.html",
     "coveralls": "cat coverage/lcov.info | coveralls",
-    "invoke:tokenPassword": "serverless invoke local --function token --path events/tokenPasswordEvent.json",
-    "invoke:tokenRefresh": "serverless invoke local --function token --path events/tokenRefreshEvent.json",
+    "invoke:tokenPassword": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenPasswordEvent.json",
+    "invoke:tokenRefresh": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenRefreshEvent.json",
     "secret:generate": "node ./tools/generate-private-key.js"
   },
   "author": "",
