@@ -14,64 +14,64 @@ test('lib.serviceHelpers.redirectResponse.redirectResponse returns response', ()
     expect(result.body).toBe('')
 })
 
-test('lib.serviceHelpers.withJsonResponse with fail response returns fail', () => {
-    expect.assertions(2)
+// test('lib.serviceHelpers.withJsonResponse with fail response returns fail', () => {
+//     expect.assertions(2)
 
-    const state = {}
+//     const state = {}
 
-    return withJsonResponse(() => Promise.reject('[123] status 123'))(state)
-        .then(response => {
-            expect(response.statusCode).toBe(123)
-            expect(response.body).toBe('{"error":"status 123"}')
-        })
-})
+//     return withJsonResponse(() => Promise.reject('[123] status 123'))(state)
+//         .then(response => {
+//             expect(response.statusCode).toBe(123)
+//             expect(response.body).toBe('{"error":"status 123"}')
+//         })
+// })
 
-test('lib.serviceHelpers.withJsonResponse with unknown failure returns 500', () => {
-    expect.assertions(2)
+// test('lib.serviceHelpers.withJsonResponse with unknown failure returns 500', () => {
+//     expect.assertions(2)
 
-    const state = {}
+//     const state = {}
 
-    return withJsonResponse(() => Promise.reject('uh oh'))(state)
-        .then(response => {
-            expect(response.statusCode).toBe(500)
-            expect(response.body).toBe('{"error":"uh oh"}')
-        })
-})
+//     return withJsonResponse(() => Promise.reject('uh oh'))(state)
+//         .then(response => {
+//             expect(response.statusCode).toBe(500)
+//             expect(response.body).toBe('{"error":"uh oh"}')
+//         })
+// })
 
-test('lib.serviceHelpers.withJsonResponse with unknown failure returns 500', () => {
-    expect.assertions(2)
+// test('lib.serviceHelpers.withJsonResponse with unknown failure returns 500', () => {
+//     expect.assertions(2)
 
-    const state = {}
+//     const state = {}
 
-    return withJsonResponse(() => Promise.reject('uh oh'))(state)
-        .then(response => {
-            expect(response.statusCode).toBe(500)
-            expect(response.body).toBe('{"error":"uh oh"}')
-        })
-})
+//     return withJsonResponse(() => Promise.reject('uh oh'))(state)
+//         .then(response => {
+//             expect(response.statusCode).toBe(500)
+//             expect(response.body).toBe('{"error":"uh oh"}')
+//         })
+// })
 
-test('lib.serviceHelpers.withJsonResponse with response returns success', () => {
-    expect.assertions(2)
+// test('lib.serviceHelpers.withJsonResponse with response returns success', () => {
+//     expect.assertions(2)
 
-    const state = {
-        success: true
-    }
+//     const state = {
+//         success: true
+//     }
 
-    return withJsonResponse(data => Promise.resolve(data))(state)
-        .then(response => {
-            expect(response.statusCode).toBe(200)
-            expect(response.body).toBe('{"success":true}')
-        })
-})
+//     return withJsonResponse(data => Promise.resolve(data))(state)
+//         .then(response => {
+//             expect(response.statusCode).toBe(200)
+//             expect(response.body).toBe('{"success":true}')
+//         })
+// })
 
-test('lib.serviceHelpers.withJsonResponse with string response returns success', () => {
-    expect.assertions(2)
+// test('lib.serviceHelpers.withJsonResponse with string response returns success', () => {
+//     expect.assertions(2)
 
-    const state = "success-true"
+//     const state = "success-true"
 
-    return withJsonResponse(data => Promise.resolve(data))(state)
-        .then(response => {
-            expect(response.statusCode).toBe(200)
-            expect(response.body).toBe('success-true')
-        })
-})
+//     return withJsonResponse(data => Promise.resolve(data))(state)
+//         .then(response => {
+//             expect(response.statusCode).toBe(200)
+//             expect(response.body).toBe('success-true')
+//         })
+// })
