@@ -1,4 +1,4 @@
-const pathOr = require('ramda/src/pathOr')
+const pathOr    = require('ramda/src/pathOr')
 const defaultTo = require('ramda/src/defaultTo')
 const status    = require('http-status')
 
