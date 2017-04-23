@@ -1,6 +1,5 @@
 const config = require('config')
-const test = require('tape')
-const strategy = require('../strategies/refreshTokenGrantType')
+const strategy = require('../refreshTokenGrantType')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
@@ -53,18 +52,18 @@ const parseToken = token => {
         .map(JSON.parse)
 }
 
-test('strategies.refreshTokenGrantType.test with invalid grant_type fails', t => {
-    t.plan(1)
+test('strategies.refreshTokenGrantType.test with invalid grant_type fails', () => {
+    expect.assertions(1)
 
     const expected = false
     
     const actual = strategy.test(null)
 
-    t.equal(actual, expected, 'test should return false')
+    expect(actual).toBe(expected)
 })
 
-test('strategies.refreshTokenGrantType.test with other grant_type fails', t => {
-    t.plan(1)
+test('strategies.refreshTokenGrantType.test with other grant_type fails', () => {
+    expect.assertions(1)
 
     const expected = false
     
@@ -74,11 +73,11 @@ test('strategies.refreshTokenGrantType.test with other grant_type fails', t => {
 
     const result = strategy.test(state)
 
-    t.equal(result, expected, 'test should return false')
+    expect(result).toBe(expected)
 })
 
-test('strategies.refreshTokenGrantType.test refresh_token grant_type returns true', t => {
-    t.plan(1)
+test('strategies.refreshTokenGrantType.test refresh_token grant_type returns true', () => {
+    expect.assertions(1)
 
     const expected = true
     
@@ -88,11 +87,11 @@ test('strategies.refreshTokenGrantType.test refresh_token grant_type returns tru
 
     const result = strategy.test(state)
 
-    t.equal(result, expected, 'test should return false')
+    expect(result).toBe(expected)
 })
 
-test('strategies.refreshTokenGrantType.run with missing token returns jwt must be provided', t => {
-    t.plan(1)
+test('strategies.refreshTokenGrantType.run with missing token returns jwt must be provided', () => {
+    expect.assertions(1)
 
     const expected = 'jwt must be provided'
     
@@ -103,14 +102,14 @@ test('strategies.refreshTokenGrantType.run with missing token returns jwt must b
         actions
     }
 
-    strategy.run(state)
+    return strategy.run(state)
         .catch(actual => {
-            t.equal(actual, expected, expected)
+            expect(actual).toBe(expected)
         })
 })
 
-test('strategies.refreshTokenGrantType.run with invalid token returns jwt malformed', t => {
-    t.plan(1)
+test('strategies.refreshTokenGrantType.run with invalid token returns jwt malformed', () => {
+    expect.assertions(1)
 
     const expected = 'jwt malformed'
     
@@ -122,14 +121,14 @@ test('strategies.refreshTokenGrantType.run with invalid token returns jwt malfor
         actions
     }
 
-    strategy.run(state)
+    return strategy.run(state)
         .catch(actual => {
-            t.equal(actual, expected, expected)
+            expect(actual).toBe(expected)
         })
 })
 
-test('strategies.refreshTokenGrantType.run with invalid token returns Failure', t => {
-    t.plan(1)
+test('strategies.refreshTokenGrantType.run with invalid token returns Failure', () => {
+    expect.assertions(1)
 
     const expected = 'Failure'
     
@@ -143,14 +142,14 @@ test('strategies.refreshTokenGrantType.run with invalid token returns Failure', 
         }
     }
 
-    strategy.run(state)
+    return strategy.run(state)
         .catch(actual => {
-            t.equal(actual, expected, expected)
+            expect(actual).toBe(expected)
         })
 })
 
-test('strategies.refreshTokenGrantType.run with token returns user', t => {
-    t.plan(19)
+test('strategies.refreshTokenGrantType.run with token returns user', () => {
+    expect.assertions(19)
 
     const expected = true
     
@@ -162,34 +161,33 @@ test('strategies.refreshTokenGrantType.run with token returns user', t => {
         actions
     }
 
-    strategy.run(state)
+    return strategy.run(state)
         .then(response => {
-            t.ok(response.token, 'token must exist')
-            t.ok(response.token.access_token, 'token must contain access_token')
-            t.ok(response.token.id_token, 'token must contain id_token')
-            t.ok(response.token.refresh_token, 'token must contain refresh_token')
+            expect(response.token).toBeTruthy()
+            expect(response.token.access_token).toBeTruthy()
+            expect(response.token.id_token).toBeTruthy()
+            expect(response.token.refresh_token).toBeTruthy()
 
             const access_token = parseToken(response.token.access_token)
             const refresh_token = parseToken(response.token.refresh_token)
             const id_token = parseToken(response.token.id_token)
 
-            t.equal(access_token[0].alg, 'RS256', 'alg must equal RS256')
-            t.equal(access_token[0].typ, 'JWT', 'typ must equal JWT')
-            t.equal(access_token[1].typ, 'Bearer', 'typ must equal Bearer')
-            t.equal(access_token[1].realm, 'test', 'realm must equal test')
-            t.equal(access_token[1].sub, 'test@test.com', 'sub must equal test@test.com')
+            expect(access_token[0].alg).toBe('RS256')
+            expect(access_token[0].typ).toBe('JWT')
+            expect(access_token[1].typ).toBe('Bearer')
+            expect(access_token[1].realm).toBe('test')
+            expect(access_token[1].sub).toBe('test@test.com')
 
-            t.equal(refresh_token[0].alg, 'RS256', 'alg must equal RS256')
-            t.equal(refresh_token[0].typ, 'JWT', 'typ must equal JWT')
-            t.equal(refresh_token[1].typ, 'Refresh', 'typ must equal Refresh')
-            t.equal(refresh_token[1].realm, 'test', 'realm must equal test')
-            t.equal(refresh_token[1].sub, 'test@test.com', 'sub must equal test@test.com')
+            expect(refresh_token[0].alg).toBe('RS256')
+            expect(refresh_token[0].typ).toBe('JWT')
+            expect(refresh_token[1].typ).toBe('Refresh')
+            expect(refresh_token[1].realm).toBe('test')
+            expect(refresh_token[1].sub).toBe('test@test.com')
 
-            t.equal(id_token[0].alg, 'RS256', 'alg must equal RS256')
-            t.equal(id_token[0].typ, 'JWT', 'typ must equal JWT')
-            t.equal(id_token[1].typ, 'ID', 'typ must equal ID')
-            t.equal(id_token[1].realm, 'test', 'realm must equal test')
-            t.equal(id_token[1].sub, 'test@test.com', 'sub must equal test@test.com')
+            expect(id_token[0].alg).toBe('RS256')
+            expect(id_token[0].typ).toBe('JWT')
+            expect(id_token[1].typ).toBe('ID')
+            expect(id_token[1].realm).toBe('test')
+            expect(id_token[1].sub).toBe('test@test.com')
         })
-        .catch(err => console.log(err))
 })

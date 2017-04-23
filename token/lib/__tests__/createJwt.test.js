@@ -1,9 +1,8 @@
-const test = require('tape')
 const jwt = require('jsonwebtoken')
 const promisify = require('functional-js/promises/promisify')
 const jwtVerify = promisify(jwt.verify)
 
-const createJwt = require('../lib/createJwt')
+const createJwt = require('../createJwt')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
@@ -52,72 +51,66 @@ const getMockState = () =>
         logs: []
     })
 
-test('actions.createJwt with invalid cert returns state with errors ', t => {
-    t.plan(1)
+test('actions.createJwt with invalid cert returns state with errors ', () => {
+    expect.assertions(1)
 
     const state = getMockState()
     const readFile = () => Promise.resolve('invalid cert')
 
-    createJwt(readFile, state)
+    return createJwt(readFile, state)
         .catch(err => {
-            t.equal(err.toString(), 'Error: error:0906D06C:PEM routines:PEM_read_bio:no start line')
+            expect(err.toString()).toBe('Error: error:0906D06C:PEM routines:PEM_read_bio:no start line')
         })
 })
 
-test('actions.createJwt returns id_token', t => {
-    t.plan(5)
+test('actions.createJwt returns id_token', () => {
+    expect.assertions(5)
 
     const state = getMockState()
     const readFile = () => Promise.resolve(privateKey)
 
-    createJwt(readFile, state)
+    return createJwt(readFile, state)
+        .then(token => jwtVerify(token.id_token, publicKey))
         .then(token => {
-            jwtVerify(token.id_token, publicKey)
-                .then(token => {
-                    t.ok(token.iat, 'iat must exist')
-                    t.ok(token.jti, 'token.jti must exist')
-                    t.equal(token.aud, state.props.client_id, 'token.aud must match props.client_id')
-                    t.equal(token.realm, state.props.realm, 'token.realm must match props.realm')
-                    t.equal(token.sub, state.props.username, 'token.sub must match props.username')
-                })
+            expect(token.iat).toBeTruthy()
+            expect(token.jti).toBeTruthy()
+            expect(token.aud).toBe(state.props.client_id)
+            expect(token.realm).toBe(state.props.realm)
+            expect(token.sub).toBe(state.props.username)
         })
 })
 
-test('actions.createJwt returns refresh_token', t => {
-    t.plan(5)
+test('actions.createJwt returns refresh_token', () => {
+    expect.assertions(5)
 
     const state = getMockState()
     const readFile = () => Promise.resolve(privateKey)
 
-    createJwt(readFile, state)
+    return createJwt(readFile, state)
+        .then(token => jwtVerify(token.refresh_token, publicKey))
         .then(token => {
-            jwtVerify(token.refresh_token, publicKey)
-                .then(token => {
-                    t.ok(token.iat, 'iat must exist')
-                    t.ok(token.jti, 'token.jti must exist')
-                    t.equal(token.aud, state.props.client_id, 'token.aud must match props.client_id')
-                    t.equal(token.realm, state.props.realm, 'token.realm must match props.realm')
-                    t.equal(token.sub, state.props.username, 'token.sub must match props.username')
-                })
+            expect(token.iat).toBeTruthy()
+            expect(token.jti).toBeTruthy()
+            expect(token.aud).toBe(state.props.client_id)
+            expect(token.realm).toBe(state.props.realm)
+            expect(token.sub).toBe(state.props.username)
         })
 })
 
-test('actions.createJwt returns access_token', t => {
-    t.plan(6)
+test('actions.createJwt returns access_token', () => {
+    expect.assertions(6)
 
     const state = getMockState()
     const readFile = () => Promise.resolve(privateKey)
 
-    createJwt(readFile, state)
+    return createJwt(readFile, state)
+        .then(token => jwtVerify(token.access_token, publicKey))
         .then(token => {
-            jwtVerify(token.access_token, publicKey)
-                .then(token => {
-                    t.ok(token.iat, 'iat must exist')
-                    t.ok(token.jti, 'token.jti must exist')
-                    t.equal(token.roles[0], state.user.roles[0], 'token.roles must match state.user.roles')
-                    t.equal(token.aud, state.props.client_id, 'token.aud must match props.client_id')
-                    t.equal(token.realm, state.props.realm, 'token.realm must match props.realm')
-                    t.equal(token.sub, state.props.username, 'token.sub must match props.username')
-                })
+            expect(token.iat).toBeTruthy()
+            expect(token.jti).toBeTruthy()
+            expect(token.roles[0]).toBe(state.user.roles[0])
+            expect(token.aud).toBe(state.props.client_id)
+            expect(token.realm).toBe(state.props.realm)
+            expect(token.sub).toBe(state.props.username)
         })
 })

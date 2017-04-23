@@ -1,5 +1,4 @@
 const config = require('config')
-const test   = require('tape')
 const token  = require('../token')
 const path   = require('ramda/src/path')
 
@@ -50,30 +49,30 @@ const readFile = file =>
 
 const writeLogs = state => Promise.resolve(state)
 
-test('services.token with no grant_type fails', t => {
-    t.plan(1)
+test('services.token with no grant_type fails', () => {
+    expect.assertions(1)
 
     const request = {}
     const mocks = { getUser: () => Promise.resolve(null) }
     
-    token(request, mocks)
-        .catch(err => t.equal(err, '"grant_type" is required', '"grant_type" is required'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"grant_type" is required'))
 })
 
-test('services.token with invalid grant_type fails', t => {
-    t.plan(1)
+test('services.token with invalid grant_type fails', () => {
+    expect.assertions(1)
 
     const request = {
             grant_type: 'INVALID'
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"grant_type" must be one of [password, refresh_token]', '"grant_type" must be one of [password, refresh_token]'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"grant_type" must be one of [password, refresh_token]'))
 })
 
-test('services.token with no client_id fails', t => {
-    t.plan(1)
+test('services.token with no client_id fails', () => {
+    expect.assertions(1)
     
     const request = {
             path: { realm: 'realm' },
@@ -81,12 +80,12 @@ test('services.token with no client_id fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"client_id" is required', '"client_id" is required'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"client_id" is required'))
 })
 
-test('services.token [password] with no username fails', t => {
-    t.plan(1)
+test('services.token [password] with no username fails', () => {
+    expect.assertions(1)
     
     const request = {
             path: { realm: 'realm' },
@@ -95,12 +94,12 @@ test('services.token [password] with no username fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"username" is required', '"username" is required'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"username" is required'))
 })
 
-test('services.token [password] with no password fails', t => {
-    t.plan(1)
+test('services.token [password] with no password fails', () => {
+    expect.assertions(1)
     
     const request = {
             path: { realm: 'realm' },
@@ -110,12 +109,12 @@ test('services.token [password] with no password fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"password" is required', '"password" is required'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"password" is required'))
 })
 
-test('services.token [password] with invalid password fails', t => {
-    t.plan(1)
+test('services.token [password] with invalid password fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -129,12 +128,12 @@ test('services.token [password] with invalid password fails', t => {
         readFile: () => Promise.resolve(privateKey)
     }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '[401] Unauthorized', '[401] Unauthorized'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('[401] Unauthorized'))
 })
 
-test('services.token [password] with no user fails', t => {
-    t.plan(1)
+test('services.token [password] with no user fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -145,12 +144,12 @@ test('services.token [password] with no user fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '[401] Unauthorized', '[401] Unauthorized'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('[401] Unauthorized'))
 })
 
-test('services.token [password] with valid password succeeds', t => {
-    t.plan(1)
+test('services.token [password] with valid password succeeds', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -164,12 +163,12 @@ test('services.token [password] with valid password succeeds', t => {
         readFile: () => Promise.resolve(privateKey)
     }
 
-    token(request, mocks)
-        .then(token => t.ok(token))
+    return token(request, mocks)
+        .then(token => expect(token).toBeTruthy())
 })
 
-test('services.token [password] with db error fails', t => {
-    t.plan(1)
+test('services.token [password] with db error fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -180,12 +179,12 @@ test('services.token [password] with db error fails', t => {
         }
     const mocks = { getUser: () => Promise.reject('Uh Oh!') }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '[500] Unknown Error', '[500] Unknown Error'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('[500] Unknown Error'))
 })
 
-test('services.token [password] with no user fails', t => {
-    t.plan(1)
+test('services.token [password] with no user fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -196,12 +195,12 @@ test('services.token [password] with no user fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '[401] Unauthorized', '[401] Unauthorized'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('[401] Unauthorized'))
 })
 
-test('services.token [password] with refresh_token fails', t => {
-    t.plan(1)
+test('services.token [password] with refresh_token fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -213,12 +212,12 @@ test('services.token [password] with refresh_token fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"refresh_token" is not allowed', '"refresh_token" is not allowed'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"refresh_token" is not allowed'))
 })
 
-test('services.token [refresh_token] with no refresh_token fails', t => {
-    t.plan(1)
+test('services.token [refresh_token] with no refresh_token fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -227,12 +226,12 @@ test('services.token [refresh_token] with no refresh_token fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"refresh_token" is required', '"refresh_token" is required'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"refresh_token" is required'))
 })
 
-test('services.token [refresh_token] with username fails', t => {
-    t.plan(1)
+test('services.token [refresh_token] with username fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -243,12 +242,12 @@ test('services.token [refresh_token] with username fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"username" is not allowed', '"username" is not allowed'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"username" is not allowed'))
 })
 
-test('services.token [refresh_token] with password fails', t => {
-    t.plan(1)
+test('services.token [refresh_token] with password fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -259,12 +258,12 @@ test('services.token [refresh_token] with password fails', t => {
         }
     const mocks = { getUser: () => Promise.resolve(null) }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '"password" is not allowed', '"password" is not allowed'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('"password" is not allowed'))
 })
 
-test('services.token [refresh_token] with invalid token fails', t => {
-    t.plan(1)
+test('services.token [refresh_token] with invalid token fails', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -276,12 +275,12 @@ test('services.token [refresh_token] with invalid token fails', t => {
         readFile
     }
 
-    token(request, mocks)
-        .catch(err => t.equal(err, '[400] Bad Request', '[400] Bad Request'))
+    return token(request, mocks)
+        .catch(err => expect(err).toBe('[400] Bad Request'))
 })
 
-test('services.token [refresh_token] with valid token succeeds', t => {
-    t.plan(1)
+test('services.token [refresh_token] with valid token succeeds', () => {
+    expect.assertions(1)
 
     const request = {
             path: { realm: 'realm' },
@@ -293,14 +292,14 @@ test('services.token [refresh_token] with valid token succeeds', t => {
         readFile, writeLogs
     }
 
-    token(request, mocks)
+    return token(request, mocks)
         .then(token => {
-            t.ok(token.access_token)
+            expect(token.access_token).toBeTruthy()
         })
 })
 
-test('services.token with redirect_uri redirects', t => {
-    t.plan(3)
+test('services.token with redirect_uri redirects', () => {
+    expect.assertions(3)
 
     const request = {
             path: { realm: 'realm' },
@@ -313,10 +312,10 @@ test('services.token with redirect_uri redirects', t => {
         readFile, writeLogs
     }
 
-    token(request, mocks)
+    return token(request, mocks)
         .then(response => {
-            t.equal(response.statusCode, 302, 'statusCode must be 302')
-            t.equal(path(['headers', 'Location'], response), request.redirect_uri, 'Location must equal redirect_uri'),
-            t.equal(response.body, '', 'body must equal ""')
+            expect(response.statusCode).toBe(302)
+            expect(path(['headers', 'Location'], response)).toBe(request.redirect_uri),
+            expect(response.body).toBe('')
         })
 })

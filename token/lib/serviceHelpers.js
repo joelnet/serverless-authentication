@@ -1,3 +1,4 @@
+const pathOr = require('ramda/src/pathOr')
 const defaultTo = require('ramda/src/defaultTo')
 const status    = require('http-status')
 
@@ -11,7 +12,7 @@ const response = (statusCode, body) =>
 
 const failResponse = error => {
     const match = /^\[(\d+)\] (.*$)/.exec(error)
-    const statusCode = defaultTo500(parseInt(match[1]))
+    const statusCode = parseInt(pathOr(500, [1], match))
     
     return match
         ? response(statusCode, { error: match[2] })
@@ -19,7 +20,7 @@ const failResponse = error => {
 }
 
 const successResponse = obj =>
-    response(status.SUCCESS, obj)
+    response(status.OK, obj)
 
 const withJsonResponse = func => x =>
     func(x)
