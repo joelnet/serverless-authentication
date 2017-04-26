@@ -10,5 +10,11 @@
     "certs": {
         "privateKey": "./.secret/private.key",
         "publicKey": "./.secret/public.key"
+    },
+    "dynamodb": {
+        "tables": {
+            "users": "social-dev-users",
+            "realms": "dev-auth-realms"
+        }
     }
 }

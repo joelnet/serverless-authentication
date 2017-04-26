@@ -319,3 +319,24 @@ test('services.token with redirect_uri redirects', () => {
             expect(response.body).toBe('')
         })
 })
+
+test('services.token with redirect_uri redirects', () => {
+    expect.assertions(2)
+
+    const request = {
+            path: { realm: 'realm' },
+            grant_type: 'refresh_token',
+            client_id: 'client_id',
+            refresh_token: foreverRefreshToken,
+            redirect_uri: 'http://mock-redirect-uri.com/page'
+        }
+    const mocks = {
+        readFile, writeLogs
+    }
+
+    return token(request, mocks)
+        .then(response => {
+            expect(response.headers.Location).toBe(request.redirect_uri)
+            expect(response.statusCode).toBe(302)
+        })
+})

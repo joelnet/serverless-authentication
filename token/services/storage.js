@@ -3,7 +3,8 @@ const config    = require('config')
 const promisify = require('functional-js/promises/promisify')
 const path      = require('ramda/src/path')
 
-const USERS = `social-${process.env.STAGE}-users`
+const USERS = config.get('dynamodb.tables.users')
+const REALMS = config.get('dynamodb.tables.realms')
 
 const docClient = new AWS.DynamoDB.DocumentClient({
         region: config.get('aws.region'),
@@ -14,7 +15,7 @@ const docClientQuery =
     promisify(docClient.query).bind(docClient)
 
 /* istanbul ignore next */
-const query = (table, condition, filter, values) =>
+const query = (table, condition, values, filter) =>
     docClientQuery({
         TableName: table,
         KeyConditionExpression: condition,
@@ -27,6 +28,10 @@ const getFirst =
 
 /* istanbul ignore next */
 module.exports.getUser = (realm, userId) =>
-    Promise.resolve()
-        .then(() => query(USERS, 'userId = :userId', 'realm = :realm', { ':userId': userId, ':realm': realm }))
+    query(USERS, 'userId = :userId', { ':userId': `${realm}:${userId}` })
         .then(getFirst)
+
+/* istanbul ignore next */
+module.exports.getRealm = realmId =>
+    query(REALMS, 'realmId = :realmId', { ':realmId': realmId })
+

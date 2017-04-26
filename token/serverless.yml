@@ -49,6 +49,18 @@ provider:
 #  artifact: my-service-code.zip
 
 functions:
+  authorize:
+    handler: handler.authorize
+    events:
+      - http:
+          path: auth/{realm}/authorize
+          method: get
+          cors: true
+      - http:
+          path: auth/{realm}/authorize
+          method: post
+          cors: true
+
   token:
     handler: handler.token
 
