@@ -1,0 +1,10 @@
+{
+  "path": { "realm": "demo" },
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  "scope": "openid",
+  "response_type": "code",
+  "client_id": "client_id",
+  "redirect_uri": "http://redirect.uri/hello"
+}

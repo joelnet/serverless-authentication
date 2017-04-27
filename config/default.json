@@ -1,0 +1,20 @@
+{
+    "aws": {
+        "region": "us-west-2",
+        "apiversion": "2012-08-10"
+    },
+    "token": {
+        "tokenExpiration": "5m",
+        "refreshTokenExpiration": "30m"
+    },
+    "certs": {
+        "privateKey": "./.secret/private.key",
+        "publicKey": "./.secret/public.key"
+    },
+    "dynamodb": {
+        "tables": {
+            "users": "social-dev-users",
+            "realms": "dev-auth-realms"
+        }
+    }
+}

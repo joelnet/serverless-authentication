@@ -1,0 +1,25 @@
+{
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+    }
+  ],
+  "TableName": "social-dev-users",
+  "KeySchema": [
+    {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+    }
+  ],
+  "TableStatus": "ACTIVE",
+  "CreationDateTime": "2016-04-03T22:59:47.164Z",
+  "ProvisionedThroughput": {
+    "NumberOfDecreasesToday": 0,
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  },
+  "TableSizeBytes": 135,
+  "ItemCount": 1,
+  "TableArn": "arn:aws:dynamodb:us-west-2:169646751958:table/social-dev-users"
+}
