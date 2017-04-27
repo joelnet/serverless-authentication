@@ -24,7 +24,7 @@
     "tape": "^4.6.3"
   },
   "scripts": {
-    "test": "STAGE=dev jest --coverage",
+    "test": "STAGE=dev jest --coverage && eslint .",
     "debug": "STAGE=dev node --nolazy --debug-brk=9000 node_modules/.bin/jest --runInBand authorize.test.js",
     "coverage:view": "xdg-open coverage/lcov-report/index.html",
     "coveralls": "cat coverage/lcov.info | coveralls",

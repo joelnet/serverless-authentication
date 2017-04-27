@@ -1,14 +1,10 @@
-const status            = require('http-status')
-const url               = require('url')
-const merge             = require('ramda/src/merge')
-const set               = require('ramda/src/set')
-const lensProp          = require('ramda/src/lensProp')
-const validatedRequest  = require('./requests/authorizeRequest')
-const pipeAsync         = require('../../lib/pipeAsync')
-const exceptionMapper   = require('../../lib/exceptionMapper')
-const appendQuery       = require('../../lib/urlHelper').appendQuery
-const logging           = require('../../services/logging')
-const getRealm          = require('../../services/storage').getRealm
+const status = require('http-status')
+const merge = require('ramda/src/merge')
+const validatedRequest = require('./requests/authorizeRequest')
+const pipeAsync = require('../../lib/pipeAsync')
+const appendQuery = require('../../lib/urlHelper').appendQuery
+const logging = require('../../services/logging')
+const getRealm = require('../../services/storage').getRealm
 
 const actions = {
     getRealm,
@@ -24,7 +20,8 @@ const getInitialState = (request, actions, dependencies) => ({
 const handleException = func => state =>
     func(state)
         .catch(err => {
-            console.log('err', err.stack || err) // TOOD: write to a log
+            // TOOD: write to a log
+            console.log('err', err.stack || err)  // eslint-disable-line no-console
             return redirect(appendQuery(state.props.redirect_uri, { error: 'Internal Server Error' }))
         })
 
@@ -38,6 +35,7 @@ const redirect = uri =>
 module.exports = validatedRequest((request, dependencies) =>
     handleException(pipeAsync(
         state => state.actions.getRealm(state.props.realm),
-        realm => realm ? redirect(appendQuery(realm.auth_uri, { state: request.state, redirect_uri: request.redirect_uri }))
-                       : redirect(appendQuery(request.redirect_uri, { error: 'realm not found' }))
+        realm => realm
+            ? redirect(appendQuery(realm.auth_uri, { state: request.state, redirect_uri: request.redirect_uri }))
+            : redirect(appendQuery(request.redirect_uri, { error: 'realm not found' }))
     ))(getInitialState(request, actions, dependencies)))
