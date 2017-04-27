@@ -3,10 +3,10 @@ const lensProp         = require('ramda/src/lensProp')
 const pathEq           = require('ramda/src/pathEq')
 const set              = require('ramda/src/set')
 const validatePassword = promisify(require('bcrypt-nodejs').compare)
-const pipeAsync        = require('../lib/pipeAsync')
-const createJwt        = require('../lib/createJwt')
-const getPrivateKey    = require('../lib/getKeys') .getPrivateKey
-const thunk            = require('../lib/thunk')
+const pipeAsync        = require('../../../lib/pipeAsync')
+const createJwt        = require('../../../lib/createJwt')
+const getPrivateKey    = require('../../../lib/getKeys') .getPrivateKey
+const thunk            = require('../../../lib/thunk')
 
 const getUserOrReject = (getUser, realm, username) =>
     pipeAsync(

@@ -34,7 +34,7 @@
     "migrate:seeddown": "dynamodump export-data --region=us-west-2 --table=social-dev-users --file=migrations/social-dev-users.data",
     "invoke:tokenPassword": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenPasswordEvent.json",
     "invoke:tokenRefresh": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenRefreshEvent.json",
-    "invoke:authorize": "SLS_DEBUG=* serverless invoke local --function authorize --path events/tokenRefreshEvent.json",
+    "invoke:authorize": "SLS_DEBUG=* serverless invoke local --function authorize --path events/authorizeEvent.json",
     "secret:generate": "node ./tools/generate-private-key.js"
   },
   "author": "",

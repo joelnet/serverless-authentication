@@ -23,15 +23,16 @@ const query = (table, condition, values, filter) =>
         ExpressionAttributeValues: values
     })
 
-const getFirst =
-    path(['Items', 0])
+/* istanbul ignore next */
+const first = func => function() {
+    return func.apply(this, arguments)
+        .then(path(['Items', 0]))
+}
 
 /* istanbul ignore next */
 module.exports.getUser = (realm, userId) =>
-    query(USERS, 'userId = :userId', { ':userId': `${realm}:${userId}` })
-        .then(getFirst)
+    first(query)(USERS, 'userId = :userId', { ':userId': `${realm}:${userId}` })
 
 /* istanbul ignore next */
 module.exports.getRealm = realmId =>
-    query(REALMS, 'realmId = :realmId', { ':realmId': realmId })
-
+    first(query)(REALMS, 'realmId = :realmId', { ':realmId': realmId })

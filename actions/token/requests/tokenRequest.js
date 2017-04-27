@@ -6,24 +6,26 @@ const pathOr      = require('ramda/src/pathOr')
 const prop        = require('ramda/src/prop')
 const concat      = require('ramda/src/concat')
 const tail        = require('ramda/src/tail')
-const pipeAsync   = require('../lib/pipeAsync')
+const pipeAsync   = require('../../../lib/pipeAsync')
 
 const getRequest = event => ({
+    grant_type: prop('grant_type', event),
     realm: path(['path', 'realm'], event),
-    response_type: prop('response_type', event),
-    scope: prop('scope', event),
     client_id: prop('client_id', event),
-    state: prop('state', event),
+    username: prop('username', event),
+    password: prop('password', event),
+    refresh_token: prop('refresh_token', event),
     redirect_uri: prop('redirect_uri',event)
 })
 
 const schema = Joi.object().keys({
+    grant_type: Joi.string().valid('password', 'refresh_token').required(), /* 'authorization_code' */
     realm: Joi.string().required(),
-    response_type: Joi.string().valid('code').required(),
-    scope: Joi.string().valid('openid').required(),
     client_id: Joi.string().required(),
-    state: Joi.string(),
-    redirect_uri: Joi.string().required()
+    username: Joi.any().when('grant_type', { is: 'password', then: Joi.required(), otherwise: Joi.forbidden() }),
+    password: Joi.any().when('grant_type', { is: 'password', then: Joi.required(), otherwise: Joi.forbidden() }),
+    refresh_token: Joi.any().when('grant_type', { is: 'refresh_token', then: Joi.required(), otherwise: Joi.forbidden() }),
+    redirect_uri: Joi.string()
 })
 
 const validate = (request, schema) =>

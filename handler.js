@@ -1,6 +1,6 @@
 const callbackify      = require('functional-js/promises/callbackify')
-const token            = require('./token')
-const authorize        = require('./authorize')
+const token            = require('./actions/token')
+const authorize        = require('./actions/authorize')
 const withJsonResponse = require('./lib/serviceHelpers').withJsonResponse
 
 module.exports.token = callbackify((event, context) =>

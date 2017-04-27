@@ -1,5 +1,5 @@
 const status = require('http-status')
-const authorize = require('../authorize')
+const authorize = require('../index')
 
 const actions = {
     getRealm: realm =>

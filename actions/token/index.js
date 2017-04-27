@@ -2,11 +2,11 @@ const fs               = require('fs')
 const promisify        = require('functional-js/promises/promisify')
 const merge            = require('ramda/src/merge')
 const prop             = require('ramda/src/prop')
-const getUser          = require('./services/storage').getUser
-const logging          = require('./services/logging')
-const pipeAsync        = require('./lib/pipeAsync')
-const exceptionMapper  = require('./lib/exceptionMapper')
-const redirectResponse = require('./lib/serviceHelpers').redirectResponse
+const getUser          = require('../../services/storage').getUser
+const logging          = require('../../services/logging')
+const pipeAsync        = require('../../lib/pipeAsync')
+const exceptionMapper  = require('../../lib/exceptionMapper')
+const redirectResponse = require('../../lib/serviceHelpers').redirectResponse
 const validatedRequest = require('./requests/tokenRequest')
 const strategies       = require('./strategies')
 

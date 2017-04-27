@@ -1,6 +1,6 @@
 const config = require('config')
-const token  = require('../token')
 const path   = require('ramda/src/path')
+const token  = require('../../token')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
