@@ -20,9 +20,7 @@
     "ddb-migrate": "^0.2.5",
     "eslint": "^3.19.0",
     "jest": "^19.0.2",
-    "keypair": "^1.0.1",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
+    "keypair": "^1.0.1"
   },
   "scripts": {
     "test": "STAGE=dev jest --coverage && eslint .",
@@ -36,7 +34,8 @@
     "invoke:tokenPassword": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenPasswordEvent.json",
     "invoke:tokenRefresh": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenRefreshEvent.json",
     "invoke:authorize": "SLS_DEBUG=* serverless invoke local --function authorize --path events/authorizeEvent.json",
-    "secret:generate": "node ./tools/generate-private-key.js"
+    "secret:generate": "node ./tools/generate-private-key.js",
+    "static:up": "aws s3 sync static s3://social-core-dev-files/auth --acl public-read --delete"
   },
   "author": "",
   "license": "MIT"

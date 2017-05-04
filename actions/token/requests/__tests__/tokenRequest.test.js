@@ -4,7 +4,7 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with no object returns grant_type error', () => {
         expect.assertions(1)
         const data = {}
-        
+
         return validate()(data)
             .catch(error => expect(error).toBe('"grant_type" is required'))
     })
@@ -12,7 +12,7 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with no realm returns realm error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'password'
+            body: "grant_type=password"
         }
 
         return validate()(data)
@@ -22,8 +22,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with no client_id returns realm error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'password',
-            path: { realm: 'realm' }
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=password"
         }
 
         return validate()(data)
@@ -33,9 +33,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=password and no username returns username error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'password',
-            path: { realm: 'realm' },
-            client_id: 'client_id'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=password&client_id=client_id"
         }
 
         return validate()(data)
@@ -45,10 +44,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=password and no password returns password error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'password',
-            path: { realm: 'realm' },
-            client_id: 'client_id',
-            username: 'username'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=password&client_id=client_id&username=username"
         }
 
         return validate()(data)
@@ -58,12 +55,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=password and refresh_token returns refresh_token error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'password',
-            path: { realm: 'realm' },
-            client_id: 'client_id',
-            username: 'username',
-            password: 'password',
-            refresh_token: 'refresh_token'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=password&client_id=client_id&username=username&password=password&refresh_token=refresh_token"
         }
 
         return validate()(data)
@@ -73,11 +66,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=password returns success', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'password',
-            path: { realm: 'realm' },
-            client_id: 'client_id',
-            username: 'username',
-            password: 'password'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=password&client_id=client_id&username=username&password=password"
         }
 
         return validate(x => x)(data)
@@ -87,9 +77,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=refresh_token and no refresh_token returns refresh_token error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'refresh_token',
-            path: { realm: 'realm' },
-            client_id: 'client_id'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=refresh_token&client_id=client_id"
         }
 
         return validate()(data)
@@ -99,10 +88,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=refresh_token and username returns username error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'refresh_token',
-            path: { realm: 'realm' },
-            client_id: 'client_id',
-            username: 'username'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=refresh_token&client_id=client_id&username=username"
         }
 
         return validate()(data)
@@ -112,10 +99,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=refresh_token and password returns password error', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'refresh_token',
-            path: { realm: 'realm' },
-            client_id: 'client_id',
-            password: 'password'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=refresh_token&client_id=client_id&password=password"
         }
 
         return validate()(data)
@@ -125,10 +110,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest with grant_type=refresh_token returns success', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'refresh_token',
-            path: { realm: 'realm' },
-            client_id: 'client_id',
-            refresh_token: 'refresh_token'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=refresh_token&client_id=client_id&refresh_token=refresh_token"
         }
 
         return validate(x => x)(data)
@@ -138,10 +121,8 @@ describe('tokenRequest', () => {
     test('requests/tokenRequest calls func', () => {
         expect.assertions(1)
         const data = {
-            grant_type: 'refresh_token',
-            path: { realm: 'realm' },
-            client_id: 'client_id',
-            refresh_token: 'refresh_token'
+            pathParameters: { realm: 'realm' },
+            body: "grant_type=refresh_token&client_id=client_id&refresh_token=refresh_token"
         }
 
         return validate(data => expect(data).toBeTruthy())(data)

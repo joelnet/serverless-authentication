@@ -35,6 +35,10 @@ const reject = func => x =>
 
 const handleException = func => state =>
     func(state)
+        .catch(err => {
+            console.log('err', err)
+            return Promise.reject(err)
+        })
         .catch(reject(exceptionMapper))
 
 const redirectOrToken = request => state =>

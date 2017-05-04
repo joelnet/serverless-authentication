@@ -11,7 +11,7 @@ describe('authorize', () => {
         expect.assertions(1)
 
         const request = {}
-        
+
         return authorize(request, actions)
             .catch(err => expect(err).toBe('"realm" is required'))
     })
@@ -20,9 +20,9 @@ describe('authorize', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' }
+            pathParameters: { realm: 'realm' },
         }
-        
+
         return authorize(request, actions)
             .catch(err => expect(err).toBe('"response_type" is required'))
     })
@@ -31,10 +31,12 @@ describe('authorize', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'fail'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'fail'
+            }
         }
-        
+
         return authorize(request, actions)
             .catch(err => expect(err).toBe('"response_type" must be one of [code]'))
     })
@@ -43,10 +45,12 @@ describe('authorize', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'code'
+            }
         }
-        
+
         return authorize(request, actions)
             .catch(err => expect(err).toBe('"scope" is required'))
     })
@@ -55,11 +59,13 @@ describe('authorize', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code',
-            scope: 'openid'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'code',
+                scope: 'openid'
+            }
         }
-        
+
         return authorize(request, actions)
             .catch(err => expect(err).toBe('"client_id" is required'))
     })
@@ -68,12 +74,14 @@ describe('authorize', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'code',
+                scope: 'openid',
+                client_id: 'client_id'
+            }
         }
-        
+
         return authorize(request, actions)
             .catch(err => expect(err).toBe('"redirect_uri" is required'))
     })
@@ -82,11 +90,13 @@ describe('authorize', () => {
         expect.assertions(3)
 
         const request = {
-            path: { realm: 'invalid' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id',
-            redirect_uri: 'redirect_uri'
+            pathParameters: { realm: 'invalid' },
+            queryStringParameters: {
+                response_type: 'code',
+                scope: 'openid',
+                client_id: 'client_id',
+                redirect_uri: 'redirect_uri'
+            }
         }
 
         const mocks = {
@@ -105,11 +115,13 @@ describe('authorize', () => {
         expect.assertions(3)
 
         const request = {
-            path: { realm: 'invalid' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id',
-            redirect_uri: 'redirect_uri'
+            pathParameters: { realm: 'invalid' },
+            queryStringParameters: {
+                response_type: 'code',
+                scope: 'openid',
+                client_id: 'client_id',
+                redirect_uri: 'redirect_uri'
+            }
         }
 
         return authorize(request, actions)
@@ -124,11 +136,13 @@ describe('authorize', () => {
         expect.assertions(3)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id',
-            redirect_uri: 'http://redirect.uri/hello'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'code',
+                scope: 'openid',
+                client_id: 'client_id',
+                redirect_uri: 'http://redirect.uri/hello'
+            }
         }
 
         return authorize(request, actions)

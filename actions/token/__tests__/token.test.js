@@ -1,6 +1,7 @@
 const config = require('config')
-const path   = require('ramda/src/path')
-const token  = require('../../token')
+const path = require('ramda/src/path')
+const token = require('../../token')
+const querystring = require('querystring')
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEApU4JW+EgeFUZG2hI3n7C0x8/gSerp1Ga90JOTkeH9+KL+FU/wankZCBx
@@ -44,8 +45,8 @@ const getUser = () => ({
 
 const readFile = file =>
     file === config.get('certs.privateKey') ? Promise.resolve(privateKey)
-  : file === config.get('certs.publicKey')  ? Promise.resolve(publicKey)
-                                            : Promise.reject('invalid file')
+        : file === config.get('certs.publicKey') ? Promise.resolve(publicKey)
+            : Promise.reject('invalid file')
 
 const writeLogs = state => Promise.resolve(state)
 
@@ -54,7 +55,7 @@ test('services.token with no grant_type fails', () => {
 
     const request = {}
     const mocks = { getUser: () => Promise.resolve(null) }
-    
+
     return token(request, mocks)
         .catch(err => expect(err).toBe('"grant_type" is required'))
 })
@@ -63,8 +64,10 @@ test('services.token with invalid grant_type fails', () => {
     expect.assertions(1)
 
     const request = {
+        body: querystring.stringify({
             grant_type: 'INVALID'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -73,11 +76,13 @@ test('services.token with invalid grant_type fails', () => {
 
 test('services.token with no client_id fails', () => {
     expect.assertions(1)
-    
+
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -86,12 +91,14 @@ test('services.token with no client_id fails', () => {
 
 test('services.token [password] with no username fails', () => {
     expect.assertions(1)
-    
+
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -100,13 +107,15 @@ test('services.token [password] with no username fails', () => {
 
 test('services.token [password] with no password fails', () => {
     expect.assertions(1)
-    
+
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id',
             username: 'username'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -117,12 +126,14 @@ test('services.token [password] with invalid password fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id',
             username: 'username',
             password: 'BAD PASSWORD'
-        }
+        })
+    }
     const mocks = {
         getUser: () => Promise.resolve(getUser()),
         readFile: () => Promise.resolve(privateKey)
@@ -136,12 +147,14 @@ test('services.token [password] with no user fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id',
             username: 'username',
             password: 'password'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -152,12 +165,14 @@ test('services.token [password] with valid password succeeds', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id',
             username: 'username',
             password: 'password'
-        }
+        })
+    }
     const mocks = {
         getUser: () => Promise.resolve(getUser()),
         readFile: () => Promise.resolve(privateKey)
@@ -171,12 +186,14 @@ test('services.token [password] with db error fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id',
             username: 'username',
             password: 'password'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.reject('Uh Oh!') }
 
     return token(request, mocks)
@@ -187,12 +204,14 @@ test('services.token [password] with no user fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id',
             username: 'username',
             password: 'password'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -203,13 +222,15 @@ test('services.token [password] with refresh_token fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'password',
             client_id: 'client_id',
             username: 'username',
             password: 'password',
             refresh_token: 'refresh_token'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -220,10 +241,12 @@ test('services.token [refresh_token] with no refresh_token fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'refresh_token',
             client_id: 'client_id'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -234,12 +257,14 @@ test('services.token [refresh_token] with username fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'refresh_token',
             client_id: 'client_id',
             username: 'username',
             refresh_token: 'refresh_token'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -250,12 +275,14 @@ test('services.token [refresh_token] with password fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'refresh_token',
             client_id: 'client_id',
             password: 'password',
             refresh_token: 'refresh_token'
-        }
+        })
+    }
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
@@ -266,11 +293,13 @@ test('services.token [refresh_token] with invalid token fails', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'refresh_token',
             client_id: 'client_id',
             refresh_token: 'refresh_token'
-        }
+        })
+    }
     const mocks = {
         readFile
     }
@@ -283,11 +312,13 @@ test('services.token [refresh_token] with valid token succeeds', () => {
     expect.assertions(1)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'refresh_token',
             client_id: 'client_id',
             refresh_token: foreverRefreshToken,
-        }
+        })
+    }
     const mocks = {
         readFile, writeLogs
     }
@@ -302,41 +333,22 @@ test('services.token with redirect_uri redirects', () => {
     expect.assertions(3)
 
     const request = {
-            path: { realm: 'realm' },
+        pathParameters: { realm: 'realm' },
+        body: querystring.stringify({
             grant_type: 'refresh_token',
             client_id: 'client_id',
             refresh_token: foreverRefreshToken,
             redirect_uri: 'http://mock-redirect-uri.com/page'
-        }
-    const mocks = {
-        readFile, writeLogs
-    }
-
-    return token(request, mocks)
-        .then(response => {
-            expect(response.statusCode).toBe(302)
-            expect(path(['headers', 'Location'], response)).toBe(request.redirect_uri),
-            expect(response.body).toBe('')
         })
-})
-
-test('services.token with redirect_uri redirects', () => {
-    expect.assertions(2)
-
-    const request = {
-            path: { realm: 'realm' },
-            grant_type: 'refresh_token',
-            client_id: 'client_id',
-            refresh_token: foreverRefreshToken,
-            redirect_uri: 'http://mock-redirect-uri.com/page'
-        }
+    }
     const mocks = {
         readFile, writeLogs
     }
 
     return token(request, mocks)
         .then(response => {
-            expect(response.headers.Location).toBe(request.redirect_uri)
             expect(response.statusCode).toBe(302)
+            expect(path(['headers', 'Location'], response)).toBe('http://mock-redirect-uri.com/page')
+            expect(response.body).toBe('')
         })
 })
