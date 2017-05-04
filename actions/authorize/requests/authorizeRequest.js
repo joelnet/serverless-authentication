@@ -19,7 +19,7 @@ const schema = Joi.object().keys({
     redirect_uri: Joi.string().required()
 })
 
-const validate = (request, schema) =>
+const validate = schema => request =>
     joiValidate(request, schema)
         .catch(err => Promise.reject(pathOr(err, ['details', 0, 'message'], err)))
 
@@ -27,7 +27,7 @@ module.exports = func =>
     function (event) {
         return pipeAsync(
             getRequest,
-            request => validate(request, schema),
+            validate(schema),
             request => func.apply(null, concat([request], tail(arguments)))
         )(event)
     }

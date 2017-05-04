@@ -11,7 +11,7 @@ const getRequest = event =>
     Object.assign({}, event.queryStringParameters, querystring.parse(event.body), event.pathParameters)
 
 const schema = Joi.object().keys({
-    grant_type: Joi.string().valid('password', 'refresh_token').required(), /* 'authorization_code' */
+    grant_type: Joi.string().valid('password', 'refresh_token').required(),
     realm: Joi.string().required(),
     client_id: Joi.string().required(),
     username: Joi.any().when('grant_type', { is: 'password', then: Joi.required(), otherwise: Joi.forbidden() }),
@@ -20,7 +20,7 @@ const schema = Joi.object().keys({
     redirect_uri: Joi.string()
 })
 
-const validate = (request, schema) =>
+const validate = schema => request =>
     joiValidate(request, schema)
         .catch(err => Promise.reject(pathOr(err, ['details', 0, 'message'], err)))
 
@@ -28,7 +28,7 @@ module.exports = func =>
     function (event) {
         return pipeAsync(
             getRequest,
-            request => validate(request, schema),
+            validate(schema),
             request => func.apply(null, concat([request], tail(arguments)))
         )(event)
     }
