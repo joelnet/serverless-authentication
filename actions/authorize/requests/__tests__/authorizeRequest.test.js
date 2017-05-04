@@ -6,7 +6,7 @@ describe('requests.authorizeRequest', () => {
         const data = {}
 
         return validate()(data)
-            .catch(error => expect(error).toBe('"realm" is required'))
+            .catch(error => expect(error).toBe('[400] "realm" is required'))
     })
 
     test('no response_type returns "response_type" is required', () => {
@@ -16,7 +16,7 @@ describe('requests.authorizeRequest', () => {
         }
 
         return validate()(data)
-            .catch(error => expect(error).toBe('"response_type" is required'))
+            .catch(error => expect(error).toBe('[400] "response_type" is required'))
     })
 
     test('invalid response_type returns "response_type" must be one of [code]', () => {
@@ -29,7 +29,7 @@ describe('requests.authorizeRequest', () => {
         }
 
         return validate()(data)
-            .catch(error => expect(error).toBe('"response_type" must be one of [code]'))
+            .catch(error => expect(error).toBe('[400] "response_type" must be one of [code]'))
     })
 
     test('no scope returns "scope" is required', () => {
@@ -42,7 +42,7 @@ describe('requests.authorizeRequest', () => {
         }
 
         return validate()(data)
-            .catch(error => expect(error).toBe('"scope" is required'))
+            .catch(error => expect(error).toBe('[400] "scope" is required'))
     })
 
     test('invalid scope returns "scope" must be one of [openid]', () => {
@@ -56,7 +56,7 @@ describe('requests.authorizeRequest', () => {
         }
 
         return validate()(data)
-            .catch(error => expect(error).toBe('"scope" must be one of [openid]'))
+            .catch(error => expect(error).toBe('[400] "scope" must be one of [openid]'))
     })
 
     test('no client_id returns "client_id" is required', () => {
@@ -70,7 +70,7 @@ describe('requests.authorizeRequest', () => {
         }
 
         return validate()(data)
-            .catch(error => expect(error).toBe('"client_id" is required'))
+            .catch(error => expect(error).toBe('[400] "client_id" is required'))
     })
 
     test('no redirect_uri returns "redirect_uri" is required', () => {
@@ -85,7 +85,7 @@ describe('requests.authorizeRequest', () => {
         }
 
         return validate()(data)
-            .catch(error => expect(error).toBe('"redirect_uri" is required'))
+            .catch(error => expect(error).toBe('[400] "redirect_uri" is required'))
     })
 
     test('authorizes querystring request', () => {

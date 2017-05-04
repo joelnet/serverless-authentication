@@ -25,6 +25,7 @@
   "scripts": {
     "test": "STAGE=dev jest --coverage && eslint .",
     "debug": "STAGE=dev node --nolazy --debug-brk=9000 node_modules/.bin/jest --runInBand authorize.test.js",
+    "deploy": "sls deploy",
     "coverage:view": "xdg-open coverage/lcov-report/index.html",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "migrate:down": "dynamodump export-schema --region=us-west-2 --table=social-dev-users --file=migrations/social-dev-users.db",

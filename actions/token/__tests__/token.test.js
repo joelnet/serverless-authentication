@@ -57,7 +57,7 @@ test('services.token with no grant_type fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"grant_type" is required'))
+        .catch(err => expect(err).toBe('[400] "grant_type" is required'))
 })
 
 test('services.token with invalid grant_type fails', () => {
@@ -71,7 +71,7 @@ test('services.token with invalid grant_type fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"grant_type" must be one of [password, refresh_token]'))
+        .catch(err => expect(err).toBe('[400] "grant_type" must be one of [password, refresh_token]'))
 })
 
 test('services.token with no client_id fails', () => {
@@ -86,7 +86,7 @@ test('services.token with no client_id fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"client_id" is required'))
+        .catch(err => expect(err).toBe('[400] "client_id" is required'))
 })
 
 test('services.token [password] with no username fails', () => {
@@ -102,7 +102,7 @@ test('services.token [password] with no username fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"username" is required'))
+        .catch(err => expect(err).toBe('[400] "username" is required'))
 })
 
 test('services.token [password] with no password fails', () => {
@@ -119,7 +119,7 @@ test('services.token [password] with no password fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"password" is required'))
+        .catch(err => expect(err).toBe('[400] "password" is required'))
 })
 
 test('services.token [password] with invalid password fails', () => {
@@ -234,7 +234,7 @@ test('services.token [password] with refresh_token fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"refresh_token" is not allowed'))
+        .catch(err => expect(err).toBe('[400] "refresh_token" is not allowed'))
 })
 
 test('services.token [refresh_token] with no refresh_token fails', () => {
@@ -250,7 +250,7 @@ test('services.token [refresh_token] with no refresh_token fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"refresh_token" is required'))
+        .catch(err => expect(err).toBe('[400] "refresh_token" is required'))
 })
 
 test('services.token [refresh_token] with username fails', () => {
@@ -268,7 +268,7 @@ test('services.token [refresh_token] with username fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"username" is not allowed'))
+        .catch(err => expect(err).toBe('[400] "username" is not allowed'))
 })
 
 test('services.token [refresh_token] with password fails', () => {
@@ -286,7 +286,7 @@ test('services.token [refresh_token] with password fails', () => {
     const mocks = { getUser: () => Promise.resolve(null) }
 
     return token(request, mocks)
-        .catch(err => expect(err).toBe('"password" is not allowed'))
+        .catch(err => expect(err).toBe('[400] "password" is not allowed'))
 })
 
 test('services.token [refresh_token] with invalid token fails', () => {

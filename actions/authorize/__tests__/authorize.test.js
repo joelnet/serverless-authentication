@@ -13,7 +13,7 @@ describe('authorize', () => {
         const request = {}
 
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"realm" is required'))
+            .catch(err => expect(err).toBe('[400] "realm" is required'))
     })
 
     test('no response_type fails', () => {
@@ -24,7 +24,7 @@ describe('authorize', () => {
         }
 
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"response_type" is required'))
+            .catch(err => expect(err).toBe('[400] "response_type" is required'))
     })
 
     test('invalid response_type fails', () => {
@@ -38,7 +38,7 @@ describe('authorize', () => {
         }
 
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"response_type" must be one of [code]'))
+            .catch(err => expect(err).toBe('[400] "response_type" must be one of [code]'))
     })
 
     test('no scope fails', () => {
@@ -52,7 +52,7 @@ describe('authorize', () => {
         }
 
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"scope" is required'))
+            .catch(err => expect(err).toBe('[400] "scope" is required'))
     })
 
     test('no client_id fails', () => {
@@ -67,7 +67,7 @@ describe('authorize', () => {
         }
 
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"client_id" is required'))
+            .catch(err => expect(err).toBe('[400] "client_id" is required'))
     })
 
     test('no redirect_uri fails', () => {
@@ -83,7 +83,7 @@ describe('authorize', () => {
         }
 
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"redirect_uri" is required'))
+            .catch(err => expect(err).toBe('[400] "redirect_uri" is required'))
     })
 
     test('getRealm fails then returns fail', () => {
