@@ -1,6 +1,7 @@
 const status = require('http-status')
 const authorize = require('../index')
 
+// TODO: test logging
 const actions = {
     getRealm: realm =>
         Promise.resolve(realm === 'demo' ? { realmId: 'demo', auth_uri: 'http://auth.uri/demo/login' } : null)

@@ -37,6 +37,13 @@ provider:
 #  artifact: my-service-code.zip
 
 functions:
+  openidConfiguration:
+    handler: handler.openidConfiguration
+    events:
+      - http:
+          path: auth/{realm}/.well-known/openid-configuration
+          method: get
+          cors: true
   authorize:
     handler: handler.authorize
     events:
@@ -48,13 +55,8 @@ functions:
           path: auth/{realm}/authorize
           method: post
           cors: true
-
   token:
     handler: handler.token
-
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
     events:
       - http:
           path: auth/{realm}/token
