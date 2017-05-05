@@ -2,10 +2,29 @@
 
 <head>
     <script src="src/axios.min.js"></script>
+    <script src="src/oidc-client.js"></script>
 </head>
 
 <body>
+    https://yydpeix3rd.execute-api.us-west-2.amazonaws.com/dev/auth/demo:demo/authorize
+    <a href="login.html">login</a>
     <h1>welcome to index.html</h1>
+    <script>
+        const options = {
+            authority: 'https://yydpeix3rd.execute-api.us-west-2.amazonaws.com/dev/auth/demo:demo/authorize',
+            client_id: 'demo/demo',
+            redirect_uri: 'https://s3-us-west-2.amazonaws.com/social-core-dev-files/auth/index.html'
+        };
+        const manager = window.m = new Oidc.UserManager(options)
+        manager.getUser()
+            .then(user => {
+                console.log('user:', user)
+            })
+            .catch(err => {
+                console.log('err:', err)
+            })
+        console.log(manager)
+    </script>
 </body>
 
 </html>
