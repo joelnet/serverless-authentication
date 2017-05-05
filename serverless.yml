@@ -76,3 +76,51 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+resources:  
+  Resources:
+    DynamoDbTableClients:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${opt:stage}-auth-clients
+        AttributeDefinitions:
+          - AttributeName: realmClientId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: realmClientId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    DynamoDbTableRealms:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${opt:stage}-auth-realms
+        AttributeDefinitions:
+          - AttributeName: realmId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: realmId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    DynamoDBIamPolicy:
+      Type: AWS::IAM::Policy
+      DependsOn: DynamoDbTableClients
+      Properties:
+        PolicyName: lambda-dynamodb
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+              Resource: arn:aws:dynamodb:*:*:table/${opt:stage}-auth-*
+        Roles:
+          - Ref: IamRoleLambdaExecution
