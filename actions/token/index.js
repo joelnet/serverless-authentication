@@ -7,7 +7,7 @@ const logging = require('../../services/logging')
 const pipeAsync = require('../../lib/pipeAsync')
 const exceptionMapper = require('../../lib/exceptionMapper')
 const redirectResponse = require('../../lib/serviceHelpers').redirectResponse
-const validatedRequest = require('./requests/tokenRequest')
+const validatedRequest = require('./request')
 const strategies = require('./strategies')
 
 const actions = {

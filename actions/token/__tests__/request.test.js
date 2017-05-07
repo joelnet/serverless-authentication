@@ -1,4 +1,4 @@
-const validate = require('../tokenRequest')
+const validate = require('../request')
 
 describe('tokenRequest', () => {
     test('requests/tokenRequest with no object returns grant_type error', () => {

@@ -1,4 +1,4 @@
-const validate = require('../authorizeRequest')
+const validate = require('../request')
 
 describe('requests.authorizeRequest', () => {
     test('no realm returns "realm" is required', () => {

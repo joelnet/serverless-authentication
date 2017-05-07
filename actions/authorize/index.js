@@ -1,6 +1,6 @@
 const status = require('http-status')
 const merge = require('ramda/src/merge')
-const validatedRequest = require('./requests/authorizeRequest')
+const validatedRequest = require('./request')
 const pipeAsync = require('../../lib/pipeAsync')
 const appendQuery = require('../../lib/urlHelper').appendQuery
 const logging = require('../../services/logging')
