@@ -2,7 +2,9 @@
 
 Open ID Connect Provider using Serverless Lambdas.
 
-based on specs from https://openid.net/specs/openid-connect-core-1_0.html
+## Project Status
+
+This project is under active development and incomplete. It is not ready for production.
 
 ## Generate RSA Keys
 

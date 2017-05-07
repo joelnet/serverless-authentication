@@ -1,6 +1,7 @@
 const status = require('http-status')
 const authorize = require('../index')
 
+// TODO: test logging
 const actions = {
     getRealm: realm =>
         Promise.resolve(realm === 'demo' ? { realmId: 'demo', auth_uri: 'http://auth.uri/demo/login' } : null)
@@ -11,86 +12,97 @@ describe('authorize', () => {
         expect.assertions(1)
 
         const request = {}
-        
+
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"realm" is required'))
+            .catch(err => expect(err).toBe('[400] "realm" is required'))
     })
 
     test('no response_type fails', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' }
+            pathParameters: { realm: 'realm' },
         }
-        
+
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"response_type" is required'))
+            .catch(err => expect(err).toBe('[400] "response_type" is required'))
     })
 
     test('invalid response_type fails', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'fail'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'fail'
+            }
         }
-        
+
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"response_type" must be one of [code]'))
+            .catch(err => expect(err).toBe('[400] "response_type" must be one of [id_token]'))
     })
 
     test('no scope fails', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'id_token'
+            }
         }
-        
+
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"scope" is required'))
+            .catch(err => expect(err).toBe('[400] "scope" is required'))
     })
 
     test('no client_id fails', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code',
-            scope: 'openid'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'id_token',
+                scope: 'openid'
+            }
         }
-        
+
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"client_id" is required'))
+            .catch(err => expect(err).toBe('[400] "client_id" is required'))
     })
 
     test('no redirect_uri fails', () => {
         expect.assertions(1)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'id_token',
+                scope: 'openid',
+                client_id: 'client_id'
+            }
         }
-        
+
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('"redirect_uri" is required'))
+            .catch(err => expect(err).toBe('[400] "redirect_uri" is required'))
     })
 
     test('getRealm fails then returns fail', () => {
         expect.assertions(3)
 
         const request = {
-            path: { realm: 'invalid' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id',
-            redirect_uri: 'redirect_uri'
+            pathParameters: { realm: 'invalid' },
+            queryStringParameters: {
+                response_type: 'id_token',
+                scope: 'openid',
+                client_id: 'client_id',
+                redirect_uri: 'redirect_uri'
+            }
         }
 
         const mocks = {
-            getRealm: () => Promise.reject('Unknown failure')
+            getRealm: () => Promise.reject('Unknown failure'),
+            writeLog: () => null
         }
 
         return authorize(request, mocks)
@@ -105,11 +117,13 @@ describe('authorize', () => {
         expect.assertions(3)
 
         const request = {
-            path: { realm: 'invalid' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id',
-            redirect_uri: 'redirect_uri'
+            pathParameters: { realm: 'invalid' },
+            queryStringParameters: {
+                response_type: 'id_token',
+                scope: 'openid',
+                client_id: 'client_id',
+                redirect_uri: 'redirect_uri'
+            }
         }
 
         return authorize(request, actions)
@@ -124,11 +138,13 @@ describe('authorize', () => {
         expect.assertions(3)
 
         const request = {
-            path: { realm: 'demo' },
-            response_type: 'code',
-            scope: 'openid',
-            client_id: 'client_id',
-            redirect_uri: 'http://redirect.uri/hello'
+            pathParameters: { realm: 'demo' },
+            queryStringParameters: {
+                response_type: 'id_token',
+                scope: 'openid',
+                client_id: 'client_id',
+                redirect_uri: 'http://redirect.uri/hello'
+            }
         }
 
         return authorize(request, actions)
