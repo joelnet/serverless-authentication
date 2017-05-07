@@ -5,17 +5,17 @@ const validatedRequest = require('./request')
 const pipeAsync = require('../../lib/pipeAsync')
 const appendQuery = require('../../lib/urlHelper').appendQuery
 
-const handleException = state => err => {
-    state.actions.writeLog(err.stack || err)
-
-    return redirect(appendQuery(state.props.redirect_uri, { error: 'Internal Server Error' }))
-}
-
 const redirect = uri => ({
     statusCode: status.FOUND,
     headers: { Location: uri },
     body: ''
 })
+
+const handleException = state => err => {
+    state.actions.writeLog(err.stack || err)
+
+    return redirect(appendQuery(state.props.redirect_uri, { error: 'Internal Server Error' }))
+}
 
 const getAuthorization = pipeAsync(
     state =>

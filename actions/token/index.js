@@ -10,16 +10,16 @@ const runTokenStrategy = state =>
         .find(o => o.test(state))
         .run(state)
 
+const getRedirectOrToken = state =>
+    state.props.redirect_uri
+        ? redirectResponse(state.props.redirect_uri)
+        : prop('token', state)
+
 const handleException = state => err => {
     state.actions.writeLog(err.stack || err)
 
     return Promise.reject(exceptionMapper(err))
 }
-
-const getRedirectOrToken = state =>
-    state.props.redirect_uri
-        ? redirectResponse(state.props.redirect_uri)
-        : prop('token', state)
 
 const getToken = pipeAsync(
     runTokenStrategy,
