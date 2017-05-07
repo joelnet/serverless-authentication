@@ -7,7 +7,8 @@ const configuration = {
 // TODO: test logging
 const actions = {
     getRealm: realm =>
-        Promise.resolve(realm === 'demo' ? { realmId: 'demo', auth_uri: 'http://auth.uri/demo/login', configuration } : null)
+        Promise.resolve(realm === 'demo' ? { realmId: 'demo', auth_uri: 'http://auth.uri/demo/login', configuration } : null),
+    writeLog: () => null
 }
 
 describe('openid-configuration', () => {
@@ -19,6 +20,21 @@ describe('openid-configuration', () => {
         return openidConfiguration(request, actions)
             .catch(err => {
                 expect(err).toBe('[400] "realm" is required')
+            })
+    })
+
+    test('unknown realm returns 404', () => {
+        expect.assertions(1)
+
+        const request = {
+            pathParameters: {
+                realm: "unknown"
+            }
+        }
+
+        return openidConfiguration(request, actions)
+            .catch(err => {
+                expect(err).toBe('[404] Not Found')
             })
     })
 
