@@ -11,6 +11,10 @@ const pipeAsync = require('../../lib/pipeAsync')
 const getRequest = event =>
     Object.assign({}, event.queryStringParameters, querystring.parse(event.body), event.pathParameters)
 
+const options = {
+    stripUnknown: true
+}
+
 const schema = Joi.object().keys({
     realm: Joi.string().required(),
     response_type: Joi.string().valid('id_token').required(),
@@ -21,7 +25,7 @@ const schema = Joi.object().keys({
 })
 
 const validate = schema => request =>
-    joiValidate(request, schema)
+    joiValidate(request, schema, options)
         .catch(err => Promise.reject(`[${status.BAD_REQUEST}] ` + pathOr(err, ['details', 0, 'message'], err)))
 
 module.exports = func =>
