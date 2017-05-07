@@ -19,9 +19,9 @@ module.exports.openidConfiguration = callbackify((request, context) =>
 )
 
 module.exports.token = callbackify((request, context) =>
-    withJsonResponse(token)(request)
+    withJsonResponse(token)(request, actions)
 )
 
 module.exports.authorize = callbackify((request, context) =>
-    withJsonResponse(authorize)(request)
+    withJsonResponse(authorize)(request, actions)
 )

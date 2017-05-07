@@ -101,7 +101,8 @@ describe('authorize', () => {
         }
 
         const mocks = {
-            getRealm: () => Promise.reject('Unknown failure')
+            getRealm: () => Promise.reject('Unknown failure'),
+            writeLog: () => null
         }
 
         return authorize(request, mocks)
