@@ -19,7 +19,7 @@ describe('requests.authorizeRequest', () => {
             .catch(error => expect(error).toBe('[400] "response_type" is required'))
     })
 
-    test('invalid response_type returns "response_type" must be one of [code]', () => {
+    test('invalid response_type returns "response_type" must be one of [id_token]', () => {
         expect.assertions(1)
         const data = {
             pathParameters: { realm: 'realm' },
@@ -29,7 +29,7 @@ describe('requests.authorizeRequest', () => {
         }
 
         return validate()(data)
-            .catch(error => expect(error).toBe('[400] "response_type" must be one of [code]'))
+            .catch(error => expect(error).toBe('[400] "response_type" must be one of [id_token]'))
     })
 
     test('no scope returns "scope" is required', () => {
@@ -37,7 +37,7 @@ describe('requests.authorizeRequest', () => {
         const data = {
             pathParameters: { realm: 'realm' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
             }
         }
 
@@ -50,7 +50,7 @@ describe('requests.authorizeRequest', () => {
         const data = {
             pathParameters: { realm: 'realm' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'invalid',
             }
         }
@@ -64,7 +64,7 @@ describe('requests.authorizeRequest', () => {
         const data = {
             pathParameters: { realm: 'realm' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid',
             }
         }
@@ -78,7 +78,7 @@ describe('requests.authorizeRequest', () => {
         const data = {
             pathParameters: { realm: 'realm' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid',
                 client_id: 'client_id',
             }
@@ -93,7 +93,7 @@ describe('requests.authorizeRequest', () => {
         const data = {
             pathParameters: { realm: 'realm' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid',
                 client_id: 'client_id',
                 redirect_uri: 'redirect_uri',
@@ -107,7 +107,7 @@ describe('requests.authorizeRequest', () => {
         expect.assertions(1)
         const data = {
             pathParameters: { realm: 'realm' },
-            body: 'response_type=code&scope=openid&client_id=client_id&redirect_uri=redirect_uri',
+            body: 'response_type=id_token&scope=openid&client_id=client_id&redirect_uri=redirect_uri',
         }
 
         return validate(data => expect(data).toBeTruthy())(data)

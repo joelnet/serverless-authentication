@@ -39,7 +39,7 @@ describe('authorize', () => {
         }
 
         return authorize(request, actions)
-            .catch(err => expect(err).toBe('[400] "response_type" must be one of [code]'))
+            .catch(err => expect(err).toBe('[400] "response_type" must be one of [id_token]'))
     })
 
     test('no scope fails', () => {
@@ -48,7 +48,7 @@ describe('authorize', () => {
         const request = {
             pathParameters: { realm: 'demo' },
             queryStringParameters: {
-                response_type: 'code'
+                response_type: 'id_token'
             }
         }
 
@@ -62,7 +62,7 @@ describe('authorize', () => {
         const request = {
             pathParameters: { realm: 'demo' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid'
             }
         }
@@ -77,7 +77,7 @@ describe('authorize', () => {
         const request = {
             pathParameters: { realm: 'demo' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid',
                 client_id: 'client_id'
             }
@@ -93,7 +93,7 @@ describe('authorize', () => {
         const request = {
             pathParameters: { realm: 'invalid' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid',
                 client_id: 'client_id',
                 redirect_uri: 'redirect_uri'
@@ -118,7 +118,7 @@ describe('authorize', () => {
         const request = {
             pathParameters: { realm: 'invalid' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid',
                 client_id: 'client_id',
                 redirect_uri: 'redirect_uri'
@@ -139,7 +139,7 @@ describe('authorize', () => {
         const request = {
             pathParameters: { realm: 'demo' },
             queryStringParameters: {
-                response_type: 'code',
+                response_type: 'id_token',
                 scope: 'openid',
                 client_id: 'client_id',
                 redirect_uri: 'http://redirect.uri/hello'

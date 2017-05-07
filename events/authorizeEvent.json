@@ -7,7 +7,7 @@
   },
   "queryStringParameters": {
     "scope": "openid",
-    "response_type": "code",
+    "response_type": "id_token",
     "client_id": "client_id",
     "redirect_uri": "http://redirect.uri/hello"
   }

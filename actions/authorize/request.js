@@ -13,7 +13,7 @@ const getRequest = event =>
 
 const schema = Joi.object().keys({
     realm: Joi.string().required(),
-    response_type: Joi.string().valid('code').required(),
+    response_type: Joi.string().valid('id_token').required(),
     scope: Joi.string().valid('openid').required(),
     client_id: Joi.string().required(),
     state: Joi.string(),
