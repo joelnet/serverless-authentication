@@ -38,7 +38,6 @@
     "invoke:authorize": "SLS_DEBUG=* serverless invoke local --function authorize --path events/authorizeEvent.json --stage dev",
     "invoke:openid-configuration": "SLS_DEBUG=* serverless invoke local --function openidConfiguration --path events/openid-configuration.json --stage dev",
     "secrets:generate": "node ./tools/generate-private-key.js",
-    "secrets:encrypt": "travis encrypt-file .secrets/private.key .secrets/private.key.enc && travis encrypt-file .secrets/public.key .secrets/public.key.enc",
     "static:up": "aws s3 sync static s3://social-core-dev-files/auth --acl public-read --delete"
   },
   "author": "",

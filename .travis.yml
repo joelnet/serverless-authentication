@@ -11,6 +11,6 @@ after_success:
   - 'cat ./coverage/lcov.info | ./node_modules/.bin/coveralls'
 deploy:
   - provider: script
-    script: tools/travis-deploy.sh
+    script: tools/travis-decrypt-and-deploy.sh && npm install --production && npm run deploy:dev
     on:
       branch: develop
