@@ -14,21 +14,6 @@ provider:
   stage: dev
   region: us-west-2
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#        - "s3:PutObject"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "s3-us-west-2.amazonaws.com" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
 
 # you can add packaging information here
 #package:
@@ -41,31 +26,27 @@ functions:
     handler: handler.openidConfiguration
     events:
       - http:
-          path: auth/{realm}/.well-known/openid-configuration
+          path: auth/{realm}/oidc/.well-known/openid-configuration
           method: get
           cors: true
   authorize:
     handler: handler.authorize
     events:
       - http:
-          path: auth/{realm}/authorize
+          path: auth/{realm}/oidc/authorize
           method: get
           cors: true
       - http:
-          path: auth/{realm}/authorize
+          path: auth/{realm}/oidc/authorize
           method: post
           cors: true
   token:
     handler: handler.token
     events:
       - http:
-          path: auth/{realm}/token
+          path: auth/{realm}/oidc/token
           method: post
           cors: true
-#      - s3: ${env:BUCKET}
-#      - schedule: rate(10 minutes)
-#      - sns: greeter-topic
-#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
 
 # you can add CloudFormation resource templates here
 #resources:
