@@ -4,23 +4,24 @@
   "description": "",
   "main": "handler.js",
   "dependencies": {
-    "aws-sdk": "^2.41.0",
+    "aws-sdk": "^2.49.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
-    "config": "^1.25.1",
+    "config": "^1.26.1",
     "functional-js": "git+https://github.com/joelnet/functional-js.git",
     "http-status": "^1.0.1",
     "joi": "^10.4.1",
-    "jsonwebtoken": "^7.3.0",
+    "jsonwebtoken": "^7.4.0",
     "ramda": "^0.23.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "coveralls": "^2.13.0",
+    "coveralls": "^2.13.1",
     "ddb-migrate": "^0.2.5",
     "eslint": "^3.19.0",
-    "jest": "^19.0.2",
-    "keypair": "^1.0.1"
+    "jest": "^20.0.0",
+    "keypair": "^1.0.1",
+    "serverless": "^1.12.1"
   },
   "scripts": {
     "test": "STAGE=dev jest --coverage && eslint .",
