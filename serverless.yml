@@ -14,12 +14,20 @@ provider:
   stage: dev
   region: us-west-2
 
-
-# you can add packaging information here
-#package:
-#  exclude:
-#    - exclude-me.js
-#  artifact: my-service-code.zip
+package:
+  exclude:
+    - "**/__tests__/**"
+    - .vscode/**
+    - coverage/**
+    - events/**
+    - migrations/**
+    - static/**
+    - tools/**
+    - .eslintignore
+    - .eslintrc.yml
+    - .npmignore
+    - .travis.yml
+    - README.md
 
 functions:
   openidConfiguration:
