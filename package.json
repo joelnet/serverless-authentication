@@ -4,7 +4,6 @@
   "description": "",
   "main": "handler.js",
   "dependencies": {
-    "aws-sdk": "^2.49.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
     "config": "^1.26.1",
@@ -16,6 +15,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "aws-sdk": "^2.49.0",
     "coveralls": "^2.13.1",
     "ddb-migrate": "^0.2.5",
     "eslint": "^3.19.0",
