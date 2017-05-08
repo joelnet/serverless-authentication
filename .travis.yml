@@ -2,5 +2,12 @@ language: node_js
 node_js:
   - 6.10.3
 script: npm install && npm test
+before_install:
+  - npm install -g jest serverless eslint
 after_success:
   - 'cat ./coverage/lcov.info | ./node_modules/.bin/coveralls'
+deploy:
+  - provider: script
+    script: npm prune --production && npm run deploy:dev
+    on:
+      branch: develop
