@@ -113,6 +113,8 @@ resources:
                 - dynamodb:PutItem
                 - dynamodb:UpdateItem
                 - dynamodb:DeleteItem
-              Resource: arn:aws:dynamodb:*:*:table/${opt:stage}-auth-*
+              Resource:
+                - arn:aws:dynamodb:*:*:table/${opt:stage}-auth-*
+                - arn:aws:dynamodb:*:*:table/social-${opt:stage}-users
         Roles:
           - Ref: IamRoleLambdaExecution
