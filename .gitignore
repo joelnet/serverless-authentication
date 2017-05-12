@@ -1,5 +1,7 @@
-.secret/*
-.serverless/*
-node_modules/*
-coverage/*
+.secrets/**
+!.secrets/*.enc
+.serverless/**
+node_modules/**
+coverage/**
 npm-debug.log
+secrets.tar

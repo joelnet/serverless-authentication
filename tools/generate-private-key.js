@@ -1,7 +1,7 @@
 const keypair = require('keypair')
 const fs = require('fs')
 
-const path = './.secret'
+const path = './.secrets'
 const pair = keypair()
 
 fs.existsSync(path) || fs.mkdirSync(path)

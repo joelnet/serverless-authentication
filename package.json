@@ -37,7 +37,7 @@
     "invoke:tokenRefresh": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenRefreshEvent.json --stage dev",
     "invoke:authorize": "SLS_DEBUG=* serverless invoke local --function authorize --path events/authorizeEvent.json --stage dev",
     "invoke:openid-configuration": "SLS_DEBUG=* serverless invoke local --function openidConfiguration --path events/openid-configuration.json --stage dev",
-    "secret:generate": "node ./tools/generate-private-key.js",
+    "secrets:generate": "node ./tools/generate-private-key.js",
     "static:up": "aws s3 sync static s3://social-core-dev-files/auth --acl public-read --delete"
   },
   "author": "",

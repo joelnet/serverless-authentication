@@ -14,8 +14,8 @@
         "refreshTokenExpiration": "30m"
     },
     "certs": {
-        "privateKey": "./.secret/private.key",
-        "publicKey": "./.secret/public.key"
+        "privateKey": "./.secrets/private.key",
+        "publicKey": "./.secrets/public.key"
     },
     "dynamodb": {
         "tables": {

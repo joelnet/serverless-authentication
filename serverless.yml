@@ -7,6 +7,7 @@ service: lambda-auth
 provider:
   name: aws
   runtime: nodejs6.10
+  memorySize: 128
   environment:
     STAGE: dev
 
@@ -14,12 +15,20 @@ provider:
   stage: dev
   region: us-west-2
 
-
-# you can add packaging information here
-#package:
-#  exclude:
-#    - exclude-me.js
-#  artifact: my-service-code.zip
+package:
+  exclude:
+    - "**/__tests__/**"
+    - .vscode/**
+    - coverage/**
+    - events/**
+    - migrations/**
+    - static/**
+    - tools/**
+    - .eslintignore
+    - .eslintrc.yml
+    - .npmignore
+    - .travis.yml
+    - README.md
 
 functions:
   openidConfiguration:
@@ -104,6 +113,8 @@ resources:
                 - dynamodb:PutItem
                 - dynamodb:UpdateItem
                 - dynamodb:DeleteItem
-              Resource: arn:aws:dynamodb:*:*:table/${opt:stage}-auth-*
+              Resource:
+                - arn:aws:dynamodb:*:*:table/${opt:stage}-auth-*
+                - arn:aws:dynamodb:*:*:table/social-${opt:stage}-users
         Roles:
           - Ref: IamRoleLambdaExecution

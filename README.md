@@ -16,7 +16,7 @@ npm install serverless -g
 npm install
 
 # Generate RSA Keys
-npm run secret:generate
+npm run secrets:generate
 
 # Deploy to dev environment
 npm deploy:dev
