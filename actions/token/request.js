@@ -1,19 +1,13 @@
-const promisify = require('functional-js/promises/promisify')
-const status = require('http-status')
 const Joi = require('joi')
-const joiValidate = promisify(Joi.validate)
 const querystring = require('querystring')
-const pathOr = require('ramda/src/pathOr')
-const concat = require('ramda/src/concat')
-const tail = require('ramda/src/tail')
-const pipeAsync = require('../../lib/pipeAsync')
-
-const getRequest = event =>
-    Object.assign({}, event.queryStringParameters, querystring.parse(event.body), event.pathParameters)
+const { getValidatedRequest } = require('../../lib/joi-helpers')
 
 const options = {
     stripUnknown: true
 }
+
+const getRequest = event =>
+    Object.assign({}, event.queryStringParameters, querystring.parse(event.body), event.pathParameters)
 
 const schema = Joi.object().keys({
     grant_type: Joi.string().valid('password', 'refresh_token').required(),
@@ -25,15 +19,4 @@ const schema = Joi.object().keys({
     redirect_uri: Joi.string()
 })
 
-const validate = schema => request =>
-    joiValidate(request, schema, options)
-        .catch(err => Promise.reject(`[${status.BAD_REQUEST}] ` + pathOr(err, ['details', 0, 'message'], err)))
-
-module.exports = func =>
-    function (event) {
-        return pipeAsync(
-            getRequest,
-            validate(schema),
-            request => func.apply(null, concat([request], tail(arguments)))
-        )(event)
-    }
+module.exports = getValidatedRequest(getRequest, schema, options)
