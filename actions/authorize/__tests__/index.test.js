@@ -4,7 +4,12 @@ const authorize = require('../index')
 // TODO: test logging
 const actions = {
     getRealm: realm =>
-        Promise.resolve(realm === 'demo' ? { realmId: 'demo', auth_uri: 'http://auth.uri/demo/login' } : null)
+        Promise.resolve(realm === 'demo' ? { realmId: 'demo', auth_uri: 'http://auth.uri/demo/login' } : null),
+    log: {
+        debug: () => null,
+        info: () => null,
+        error: () => null,
+    }
 }
 
 describe('authorize', () => {
@@ -102,7 +107,8 @@ describe('authorize', () => {
 
         const mocks = {
             getRealm: () => Promise.reject('Unknown failure'),
-            writeLog: () => null
+            writeLog: () => null,
+            log: actions.log,
         }
 
         return authorize(request, mocks)

@@ -1,6 +1,6 @@
 {
   "pathParameters": {
-    "realm": "demo"
+    "realm": "demo:demo"
   },
   "headers": {
     "Content-Type": "application/x-www-form-urlencoded"
