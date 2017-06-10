@@ -9,7 +9,7 @@ const actions = {
         debug: () => null,
         info: () => null,
         error: () => null,
-    }
+    },
 }
 
 describe('authorize', () => {
@@ -107,7 +107,6 @@ describe('authorize', () => {
 
         const mocks = {
             getRealm: () => Promise.reject('Unknown failure'),
-            writeLog: () => null,
             log: actions.log,
         }
 

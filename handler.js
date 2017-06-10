@@ -13,21 +13,15 @@ const getUser = require('./services/storage').getUser
 const createUser = require('./services/storage').createUser
 const getRealm = require('./services/storage').getRealm
 const logging = require('./services/logging')
-const writeLog = require('./services/writeLog')
-
-const getLogStream = () =>
-    bformat({ outputMode: process.env.SLS_DEBUG ? 'short' : 'bunyan' })
 
 const actions = {
     getRealm,
     getUser,
     createUser,
     readFile: promisify(fs.readFile),
-    writeLogs: logging,
-    writeLog,
     log: bunyan.createLogger({
         name: 'mojo-auth',
-        stream: getLogStream(),
+        stream: bformat({ outputMode: process.env.SLS_DEBUG ? 'short' : 'bunyan' }),
         level: 'debug'
     }),
 }
