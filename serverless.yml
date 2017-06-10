@@ -60,9 +60,9 @@ functions:
     handler: handler.userRegistration
     events:
       - http:
-        path: auth/{realm}/registration
-        method: post
-        cors: true
+          path: auth/{realm}/registration
+          method: post
+          cors: true
 
 # you can add CloudFormation resource templates here
 #resources:
