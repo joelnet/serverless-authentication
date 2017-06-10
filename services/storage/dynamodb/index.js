@@ -2,13 +2,14 @@ const AWS = require('aws-sdk')
 const config = require('config')
 const promisify = require('functional-js/promises/promisify')
 const path = require('ramda/src/path')
+const createUser = require('./create-user')
 
 const USERS = config.get('dynamodb.tables.users')
 const REALMS = config.get('dynamodb.tables.realms')
 
 const docClient = new AWS.DynamoDB.DocumentClient({
     region: config.get('aws.region'),
-    apiVersion: config.get('aws.apiversion')
+    apiVersion: config.get('aws.apiversion'),
 })
 
 const docClientQuery =
@@ -20,7 +21,7 @@ const query = (table, condition, values, filter) =>
         TableName: table,
         KeyConditionExpression: condition,
         FilterExpression: filter,
-        ExpressionAttributeValues: values
+        ExpressionAttributeValues: values,
     })
 
 /* istanbul ignore next */
@@ -32,6 +33,9 @@ const first = func => function () {
 /* istanbul ignore next */
 module.exports.getUser = (realm, userId) =>
     first(query)(USERS, 'userId = :userId', { ':userId': `${realm}:${userId}` })
+
+/* istanbul ignore next */
+module.exports.createUser = createUser
 
 /* istanbul ignore next */
 module.exports.getRealm = realmId =>

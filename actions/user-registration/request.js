@@ -10,12 +10,10 @@ const getRequest = event =>
     Object.assign({}, event.queryStringParameters, querystring.parse(event.body), event.pathParameters)
 
 const schema = Joi.object().keys({
-    grant_type: Joi.string().valid('password', 'refresh_token').required(),
     realm: Joi.string().required(),
     client_id: Joi.string().required(),
-    username: Joi.any().when('grant_type', { is: 'password', then: Joi.required(), otherwise: Joi.forbidden() }),
-    password: Joi.any().when('grant_type', { is: 'password', then: Joi.required(), otherwise: Joi.forbidden() }),
-    refresh_token: Joi.any().when('grant_type', { is: 'refresh_token', then: Joi.required(), otherwise: Joi.forbidden() }),
+    username: Joi.string().email().required(),
+    password: Joi.string().required(),
     redirect_uri: Joi.string()
 })
 

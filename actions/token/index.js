@@ -16,14 +16,17 @@ const getRedirectOrToken = state =>
         : prop('token', state)
 
 const handleException = state => err => {
-    state.actions.writeLog(err.stack || err)
+    state.actions.log.error(err.stack || err)
 
     return Promise.reject(exceptionMapper(err))
 }
 
 const getToken = pipeAsync(
     runTokenStrategy,
-    state => state.actions.writeLogs(state),
+    state => (
+        state.actions.log.info(state), // TODO: convert this to a TAP
+        state
+    ),
     getRedirectOrToken
 )
 

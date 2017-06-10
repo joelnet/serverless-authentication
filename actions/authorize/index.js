@@ -12,9 +12,10 @@ const redirect = uri => ({
 })
 
 const handleException = state => err => {
-    state.actions.writeLog(err.stack || err)
-
-    return redirect(appendQuery(state.props.redirect_uri, { error: 'Internal Server Error' }))
+    const response = redirect(appendQuery(state.props.redirect_uri, { error: 'Internal Server Error' }))
+    state.actions.log.error(err.stack || err)
+    state.actions.log.debug('Response:', response)
+    return response
 }
 
 const getAuthorization = pipeAsync(
@@ -29,6 +30,8 @@ const getAuthorization = pipeAsync(
 
 module.exports = validatedRequest((request, actions) => {
     const state = { props: request, actions }
+
+    actions.log.debug('Starting oidc/authorize')
 
     return getAuthorization(state)
         .catch(handleException(state))
