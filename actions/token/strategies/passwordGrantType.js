@@ -1,4 +1,4 @@
-const promisify = require('functional-js/promises/promisify')
+const promisify = require('functional-helpers/promisify')
 const lensProp = require('ramda/src/lensProp')
 const pathEq = require('ramda/src/pathEq')
 const set = require('ramda/src/set')

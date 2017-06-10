@@ -1,5 +1,5 @@
 const config = require('config')
-const promisify = require('functional-js/promises/promisify')
+const promisify = require('functional-helpers/promisify')
 const Joi = require('joi')
 const joiValidate = promisify(Joi.validate)
 const docClient = require('./doc-client')

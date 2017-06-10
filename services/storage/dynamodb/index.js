@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk')
 const config = require('config')
-const promisify = require('functional-js/promises/promisify')
+const promisify = require('functional-helpers/promisify')
 const path = require('ramda/src/path')
 const createUser = require('./create-user')
 

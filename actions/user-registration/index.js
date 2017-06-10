@@ -1,4 +1,4 @@
-const promisify = require('functional-js/promises/promisify')
+const promisify = require('functional-helpers/promisify')
 const hash = promisify(require('bcrypt-nodejs').hash)
 const dissoc = require('ramda/src/dissoc')
 const set = require('ramda/src/set')
