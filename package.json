@@ -6,8 +6,10 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
+    "bunyan": "^1.8.10",
+    "bunyan-format": "^0.2.1",
     "config": "^1.26.1",
-    "functional-js": "git+https://github.com/joelnet/functional-js.git",
+    "functional-helpers": "github:joelnet/functional-helpers",
     "http-status": "^1.0.1",
     "joi": "^10.4.1",
     "jsonwebtoken": "^7.4.0",
@@ -37,6 +39,7 @@
     "invoke:tokenRefresh": "SLS_DEBUG=* serverless invoke local --function token --path events/tokenRefreshEvent.json --stage dev",
     "invoke:authorize": "SLS_DEBUG=* serverless invoke local --function authorize --path events/authorizeEvent.json --stage dev",
     "invoke:openid-configuration": "SLS_DEBUG=* serverless invoke local --function openidConfiguration --path events/openid-configuration.json --stage dev",
+    "invoke:user-registration": "SLS_DEBUG=* serverless invoke local --function userRegistration --path events/user-registration.json --stage dev",
     "secrets:generate": "node ./tools/generate-private-key.js",
     "static:up": "aws s3 sync static s3://social-core-dev-files/auth --acl public-read --delete"
   },

@@ -8,7 +8,11 @@ const configuration = {
 const actions = {
     getRealm: realm =>
         Promise.resolve(realm === 'demo' ? { realmId: 'demo', auth_uri: 'http://auth.uri/demo/login', configuration } : null),
-    writeLog: () => null
+    log: {
+        debug: () => null,
+        info: () => null,
+        error: () => null,
+    },
 }
 
 describe('openid-configuration', () => {

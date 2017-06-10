@@ -45,12 +45,16 @@ const getUser = () => ({
     password: '$2a$10$wPxFuUCZ1bv3XU0jw.EPceArhxw1lFbX8n/qW0c.z6cFcANZF1IHy'
 })
 
+const log = {
+    debug: () => null,
+    info: () => null,
+    error: () => null,
+}
+
 const readFile = file =>
     file === config.get('certs.privateKey') ? Promise.resolve(privateKey)
         : file === config.get('certs.publicKey') ? Promise.resolve(publicKey)
             : Promise.reject('invalid file')
-
-const writeLogs = state => Promise.resolve(state)
 
 describe('actions.token', () => {
     test('with no grant_type fails', () => {
@@ -104,7 +108,7 @@ describe('actions.token', () => {
         }
         const mocks = {
             getUser: () => Promise.resolve(null),
-            writeLog: () => null
+            log,
         }
 
         return token(request, mocks)
@@ -143,7 +147,7 @@ describe('actions.token', () => {
         const mocks = {
             getUser: () => Promise.resolve(getUser()),
             readFile: () => Promise.resolve(privateKey),
-            writeLog: () => null
+            log,
         }
 
         return token(request, mocks)
@@ -164,7 +168,7 @@ describe('actions.token', () => {
         }
         const mocks = {
             getUser: () => Promise.resolve(null),
-            writeLog: () => null
+            log,
         }
 
         return token(request, mocks)
@@ -186,7 +190,11 @@ describe('actions.token', () => {
         const mocks = {
             getUser: () => Promise.resolve(getUser()),
             readFile: () => Promise.resolve(privateKey),
-            writeLogs: state => state
+            log: {
+                info: () => null,
+                debug: () => null,
+                error: () => null,
+            }
         }
 
         return token(request, mocks)
@@ -215,7 +223,7 @@ describe('actions.token', () => {
         }
         const mocks = {
             getUser: () => Promise.reject('Uh Oh!'),
-            writeLog: () => null
+            log,
         }
 
         return token(request, mocks)
@@ -306,7 +314,7 @@ describe('actions.token', () => {
         }
         const mocks = {
             readFile,
-            writeLog: () => null
+            log,
         }
 
         return token(request, mocks)
@@ -325,7 +333,7 @@ describe('actions.token', () => {
             })
         }
         const mocks = {
-            readFile, writeLogs
+            readFile, log
         }
 
         return token(request, mocks)
@@ -347,7 +355,7 @@ describe('actions.token', () => {
             })
         }
         const mocks = {
-            readFile, writeLogs
+            readFile, log
         }
 
         return token(request, mocks)
@@ -356,6 +364,7 @@ describe('actions.token', () => {
                 expect(path(['headers', 'Location'], response)).toBe('http://mock-redirect-uri.com/page')
                 expect(response.body).toBe('')
             })
+            .catch(err => console.log('!!!!!!!!', err))
     })
 
     test('with expired token returns access_denied', () => {
@@ -371,7 +380,7 @@ describe('actions.token', () => {
             })
         }
         const mocks = {
-            readFile, writeLogs, writeLog: () => null
+            readFile, log
         }
 
         return token(request, mocks)

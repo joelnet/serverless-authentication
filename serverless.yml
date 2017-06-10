@@ -56,6 +56,13 @@ functions:
           path: auth/{realm}/oidc/token
           method: post
           cors: true
+  userRegistration:
+    handler: handler.userRegistration
+    events:
+      - http:
+          path: auth/{realm}/registration
+          method: post
+          cors: true
 
 # you can add CloudFormation resource templates here
 #resources:
