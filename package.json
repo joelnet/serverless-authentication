@@ -6,6 +6,8 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
+    "bunyan": "^1.8.10",
+    "bunyan-format": "^0.2.1",
     "config": "^1.26.1",
     "functional-js": "git+https://github.com/joelnet/functional-js.git",
     "http-status": "^1.0.1",

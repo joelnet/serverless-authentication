@@ -31,5 +31,5 @@ const rejectMessage = err =>
 /* istanbul ignore next */
 module.exports = (user) =>
     joiValidate(user, schema)
-        .then(user => docClientPut(createUserDoc(user)))
+        .then(user => docClientPut(createUserDoc(user)).then(() => user))
         .catch(err => Promise.reject(rejectMessage(err)))

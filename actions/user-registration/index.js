@@ -1,9 +1,12 @@
 const promisify = require('functional-js/promises/promisify')
-const hashPassword = promisify(require('bcrypt-nodejs').hash)
+const hash = promisify(require('bcrypt-nodejs').hash)
+const dissoc = require('ramda/src/dissoc')
+const set = require('ramda/src/set')
+const lensPath = require('ramda/src/lensPath')
 const validatedRequest = require('./request')
 const exceptionMapper = require('../../lib/exceptionMapper')
 
-const getUser = (state) => ({
+const toUserModel = (state) => ({
     userId: `${state.props.realm}:${state.props.username}`,
     emailAddress: state.props.username,
     password: state.props.password,
@@ -11,31 +14,36 @@ const getUser = (state) => ({
     roles: [],
 })
 
-const setHashedPassword = obj => hash => {
-    const props = { props: Object.assign({}, obj.props, { password: hash }) }
-    return Object.assign({}, obj, props)
-}
-
 const ensureRealmExists = state =>
     state.actions.getRealm(state.props.realm)
         .then(realm => realm ? Promise.resolve(state) : Promise.reject('Realm not found'))
 
-const handleException = state => err => {
-    state.actions.writeLog(err.stack || err)
+const hashPassword = state =>
+    hash(state.props.password, null, null)
+        .then(hash => set(lensPath(['props', 'password']), hash, state))
 
-    return Promise.reject(exceptionMapper(err))
-}
+const handleException = state => err =>
+    Promise.resolve()
+        .then(() => state.actions.log.error(err.stack || err))
+        .then(() => Promise.reject(exceptionMapper(err)))
+        .catch(err => (
+            state.actions.log.debug('Response:', err),
+            Promise.reject(err)
+        ))
 
 module.exports = validatedRequest((request, actions) => {
     const state = { props: request, actions }
 
+    actions.log.debug('Starting user-registration')
+
     return Promise.resolve(state)
         .then(ensureRealmExists)
-        .then(state =>
-            hashPassword(state.props.password, null, null)
-                .then(setHashedPassword(state))
-        )
-        .then(state => state.actions.createUser(getUser(state)))
-        .then(() => ({ statusCode: 201 }))
+        .then(hashPassword)
+        .then(state => state.actions.createUser(toUserModel(state)))
+        .then(user => state.actions.log.info('User created', JSON.stringify(dissoc('password', user))))
+        .then(() => (
+            state.actions.log.debug('Response:', { statusCode: 201 }),
+            { statusCode: 201 }
+        ))
         .catch(handleException(state))
 })

@@ -3,7 +3,7 @@ const exceptionMapper = require('../../lib/exceptionMapper')
 const pipeAsync = require('../../lib/pipeAsync')
 
 const handleException = state => err => {
-    state.actions.writeLog(err.stack || err)
+    state.actions.log.error(err.stack || err)
 
     return Promise.reject(exceptionMapper(err))
 }

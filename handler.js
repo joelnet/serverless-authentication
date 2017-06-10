@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+const bunyan = require('bunyan')
+const bformat = require('bunyan-format')
 const fs = require('fs')
 const callbackify = require('functional-js/promises/callbackify')
 const promisify = require('functional-js/promises/promisify')
@@ -11,15 +13,17 @@ const getUser = require('./services/storage').getUser
 const createUser = require('./services/storage').createUser
 const getRealm = require('./services/storage').getRealm
 const logging = require('./services/logging')
-const writeLog = require('./services/writeLog')
 
 const actions = {
     getRealm,
     getUser,
     createUser,
     readFile: promisify(fs.readFile),
-    writeLogs: logging,
-    writeLog
+    log: bunyan.createLogger({
+        name: 'mojo-auth',
+        stream: bformat({ outputMode: process.env.SLS_DEBUG ? 'short' : 'bunyan' }),
+        level: 'debug'
+    }),
 }
 
 module.exports.openidConfiguration = callbackify((request, context) =>
