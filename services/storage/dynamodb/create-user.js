@@ -13,9 +13,9 @@ const schema = Joi.object().keys({
 })
 
 const docClientPut =
-    promisify(docClient.put).bind(docClient)
+    promisify(docClient.put, docClient)
 
-const createUserDoc = user => ({
+const toUserDoc = user => ({
     TableName: config.get('dynamodb.tables.users'),
     Item: user,
     Expected: {
@@ -31,5 +31,5 @@ const rejectMessage = err =>
 /* istanbul ignore next */
 module.exports = (user) =>
     joiValidate(user, schema)
-        .then(user => docClientPut(createUserDoc(user)).then(() => user))
+        .then(user => docClientPut(toUserDoc(user)).then(() => user))
         .catch(err => Promise.reject(rejectMessage(err)))
