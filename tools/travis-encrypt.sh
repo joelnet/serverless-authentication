@@ -1,5 +1,6 @@
 #!/bin/bash
 
-tar cvf secrets.tar .secrets/*
+cd .secrets
+tar cvf secrets.tar *.key
 travis encrypt-file secrets.tar
 rm secrets.tar
