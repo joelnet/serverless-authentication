@@ -12,8 +12,7 @@ const docClient = new AWS.DynamoDB.DocumentClient({
     apiVersion: config.get('aws.apiversion'),
 })
 
-const docClientQuery =
-    promisify(docClient.query).bind(docClient)
+const docClientQuery = promisify(docClient.query, docClient)
 
 /* istanbul ignore next */
 const query = (table, condition, values, filter) =>

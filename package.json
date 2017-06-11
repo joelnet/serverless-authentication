@@ -2,7 +2,6 @@
   "name": "aws-lambda-auth",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
