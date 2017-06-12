@@ -3,6 +3,8 @@ const validatedRequest = require('./request')
 const exceptionMapper = require('../../lib/exceptionMapper')
 const pipeAsync = require('../../lib/pipeAsync')
 
+// spec: https://openid.net/specs/openid-connect-discovery-1_0.html
+
 const rootUri = config.get('authorizationEndpoint')
 
 const getConfiguration = realm => ({
