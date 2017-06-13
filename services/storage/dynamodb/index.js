@@ -29,7 +29,7 @@ module.exports.getUser = (realm, userId) =>
     first(query)(USERS, 'userId = :userId', { ':userId': `${realm}:${userId}` })
 
 /* istanbul ignore next */
-module.exports.createUser = createUser
+module.exports.createUser = createUser(docClient)
 
 /* istanbul ignore next */
 module.exports.getRealm = realmId =>
