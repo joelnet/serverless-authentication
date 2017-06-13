@@ -3,6 +3,7 @@ const config = require('config')
 const promisify = require('functional-helpers/promisify')
 const path = require('ramda/src/path')
 const createUser = require('./create-user')
+const first = require('./lib/helpers').first
 
 const USERS = config.get('dynamodb.tables.users')
 const REALMS = config.get('dynamodb.tables.realms')
@@ -22,12 +23,6 @@ const query = (table, condition, values, filter) =>
         FilterExpression: filter,
         ExpressionAttributeValues: values,
     })
-
-/* istanbul ignore next */
-const first = func => function () {
-    return func.apply(this, arguments)
-        .then(path(['Items', 0]))
-}
 
 /* istanbul ignore next */
 module.exports.getUser = (realm, userId) =>
