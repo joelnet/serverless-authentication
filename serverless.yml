@@ -63,6 +63,13 @@ functions:
           path: auth/{realm}/registration
           method: post
           cors: true
+  createRealm:
+    handler: handler.createRealm
+    events:
+      - http:
+          path: auth/{realm}
+          method: post
+          cors: true
 
 # you can add CloudFormation resource templates here
 #resources:

@@ -1,16 +1,12 @@
-const AWS = require('aws-sdk')
-const config = require('config')
-const createUser = require('./create-user')
-const getRealm = require('./get-realm')
-const getUser = require('./get-user')
-
-const docClient = new AWS.DynamoDB.DocumentClient({
-    region: config.get('aws.region'),
-    apiVersion: config.get('aws.apiversion'),
-})
+const client = require('./doc-client')
+const getUser = require('./get-user')(client)
+const createUser = require('./create-user')(client)
+const getRealm = require('./get-realm')(client)
+const createRealm = require('./create-realm')(client)
 
 module.exports = {
-    getUser: getUser(docClient),
-    createUser: createUser(docClient),
-    getRealm: getRealm(docClient),
+    getUser,
+    createUser,
+    getRealm,
+    createRealm,
 }
