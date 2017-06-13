@@ -1,12 +1,11 @@
 const AWS = require('aws-sdk')
 const config = require('config')
 const promisify = require('functional-helpers/promisify')
-const path = require('ramda/src/path')
 const createUser = require('./create-user')
+const getRealm = require('./get-realm')
 const first = require('./lib/helpers').first
 
 const USERS = config.get('dynamodb.tables.users')
-const REALMS = config.get('dynamodb.tables.realms')
 
 const docClient = new AWS.DynamoDB.DocumentClient({
     region: config.get('aws.region'),
@@ -32,5 +31,4 @@ module.exports.getUser = (realm, userId) =>
 module.exports.createUser = createUser(docClient)
 
 /* istanbul ignore next */
-module.exports.getRealm = realmId =>
-    first(query)(REALMS, 'realmId = :realmId', { ':realmId': realmId })
+module.exports.getRealm = getRealm(docClient)
