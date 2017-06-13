@@ -12,7 +12,7 @@ const getRequest = event =>
 const schema = Joi.object().keys({
     realm: Joi.string().required(),
     client_id: Joi.string().required(),
-    username: Joi.string().required(),
+    username: Joi.string().alphanum().min(4).max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
     redirect_uri: Joi.string()

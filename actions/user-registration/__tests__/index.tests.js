@@ -86,7 +86,7 @@ describe('user-registration', () => {
             pathParameters: { realm: 'realm' },
             body: querystring.stringify({
                 client_id: 'client_id',
-                username: 'test@test.com',
+                username: 'username',
                 email: 'test@test.com',
             })
         }
@@ -102,7 +102,7 @@ describe('user-registration', () => {
             pathParameters: { realm: 'invalid' },
             body: querystring.stringify({
                 client_id: 'client_id',
-                username: 'test@test.com',
+                username: 'username',
                 email: 'test@test.com',
                 password: 'password'
             })
@@ -123,7 +123,7 @@ describe('user-registration', () => {
             pathParameters: { realm: 'realm' },
             body: querystring.stringify({
                 client_id: 'client_id',
-                username: 'test@test.com',
+                username: 'username',
                 email: 'test@test.com',
                 password: 'password'
             })
