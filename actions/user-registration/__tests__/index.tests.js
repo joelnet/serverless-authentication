@@ -48,7 +48,7 @@ describe('user-registration', () => {
             .catch(err => expect(err).toBe('[400] "username" is required'))
     })
 
-    test('invalid username returns [400] "username" must be a valid email', () => {
+    test('email returns [400] "email" is required', () => {
         expect.assertions(1)
 
         const request = {
@@ -60,7 +60,23 @@ describe('user-registration', () => {
         }
 
         return userRegistration(request, actions)
-            .catch(err => expect(err).toBe('[400] "username" must be a valid email'))
+            .catch(err => expect(err).toBe('[400] "email" is required'))
+    })
+
+    test('invalid email returns [400] "email" must be a valid email', () => {
+        expect.assertions(1)
+
+        const request = {
+            pathParameters: { realm: 'realm' },
+            body: querystring.stringify({
+                client_id: 'client_id',
+                username: 'username',
+                email: 'invalid',
+            })
+        }
+
+        return userRegistration(request, actions)
+            .catch(err => expect(err).toBe('[400] "email" must be a valid email'))
     })
 
     test('no password returns [400] "password" is required', () => {
@@ -71,6 +87,7 @@ describe('user-registration', () => {
             body: querystring.stringify({
                 client_id: 'client_id',
                 username: 'test@test.com',
+                email: 'test@test.com',
             })
         }
 
@@ -86,6 +103,7 @@ describe('user-registration', () => {
             body: querystring.stringify({
                 client_id: 'client_id',
                 username: 'test@test.com',
+                email: 'test@test.com',
                 password: 'password'
             })
         }
@@ -106,6 +124,7 @@ describe('user-registration', () => {
             body: querystring.stringify({
                 client_id: 'client_id',
                 username: 'test@test.com',
+                email: 'test@test.com',
                 password: 'password'
             })
         }
@@ -125,7 +144,8 @@ describe('user-registration', () => {
             pathParameters: { realm: 'realm' },
             body: querystring.stringify({
                 client_id: 'client_id',
-                username: 'test2@test.com',
+                username: 'username',
+                email: 'test2@test.com',
                 password: 'password'
             })
         }

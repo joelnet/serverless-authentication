@@ -6,6 +6,7 @@ const docClient = require('./doc-client')
 
 const schema = Joi.object().keys({
     userId: Joi.string().regex(/^[^:]+:[^:]+:[^:]+$/).required(),
+    username: Joi.string().required(),
     emailAddress: Joi.string().email().required(),
     password: Joi.string().required(),
     realm: Joi.string().regex(/^[^:]+:[^:]+$/).required(),

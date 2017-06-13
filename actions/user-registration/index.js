@@ -8,7 +8,8 @@ const exceptionMapper = require('../../lib/exceptionMapper')
 
 const toUserModel = (state) => ({
     userId: `${state.props.realm}:${state.props.username}`,
-    emailAddress: state.props.username,
+    username: state.props.username,
+    emailAddress: state.props.email,
     password: state.props.password,
     realm: state.props.realm,
     roles: [],

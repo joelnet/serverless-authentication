@@ -24,24 +24,39 @@ describe('userRegistrationRequest', () => {
         const data = {
             pathParameters: { realm: 'realm' },
             body: querystring.encode({
-                client_id: 'client_id'
+                client_id: 'client_id',
             })
         }
         return validate(I)(data)
             .catch(error => expect(error).toBe('[400] "username" is required'))
     })
 
-    test('invalid username returns [400] "username" must be a valid email', () => {
+    test('no email returns [400] "email" is required', () => {
         expect.assertions(1)
         const data = {
             pathParameters: { realm: 'realm' },
             body: querystring.encode({
                 client_id: 'client_id',
-                username: 'invalid'
+                username: 'username',
             })
         }
         return validate(I)(data)
-            .catch(error => expect(error).toBe('[400] "username" must be a valid email'))
+            .catch(error => expect(error).toBe('[400] "email" is required'))
+    })
+
+    test('invalid email returns [400] "email" must be a valid email', () => {
+        expect.assertions(1)
+        const data = {
+            pathParameters: { realm: 'realm' },
+            body: querystring.encode({
+                client_id: 'client_id',
+                username: 'username',
+                email: 'invalid',
+                password: 'password',
+            })
+        }
+        return validate(I)(data)
+            .catch(error => expect(error).toBe('[400] "email" must be a valid email'))
     })
 
     test('no password returns [400] "password" is required', () => {
@@ -50,7 +65,8 @@ describe('userRegistrationRequest', () => {
             pathParameters: { realm: 'realm' },
             body: querystring.encode({
                 client_id: 'client_id',
-                username: 'email@address.com'
+                username: 'email@address.com',
+                email: 'test@test.com',
             })
         }
         return validate(I)(data)
@@ -63,12 +79,13 @@ describe('userRegistrationRequest', () => {
             pathParameters: { realm: 'realm' },
             body: querystring.encode({
                 client_id: 'client_id',
-                username: 'email@address.com',
-                password: 'password'
+                username: 'username',
+                email: 'test@test.com',
+                password: 'password',
             })
         }
         return validate(request => {
-            expect(request).toEqual({ realm: 'realm', client_id: 'client_id', username: 'email@address.com', password: 'password' })
+            expect(request).toEqual({ realm: 'realm', client_id: 'client_id', username: 'username', email: 'test@test.com', password: 'password' })
         })(data)
     })
 })
