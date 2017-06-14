@@ -65,7 +65,7 @@ describe('userRegistrationRequest', () => {
             pathParameters: { realm: 'realm' },
             body: querystring.encode({
                 client_id: 'client_id',
-                username: 'email@address.com',
+                username: 'username',
                 email: 'test@test.com',
             })
         }
