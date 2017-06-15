@@ -53,8 +53,8 @@ const log = {
 
 const readFile = file =>
     file === config.get('certs.privateKey') ? Promise.resolve(privateKey)
-        : file === config.get('certs.publicKey') ? Promise.resolve(publicKey)
-            : Promise.reject('invalid file')
+  : file === config.get('certs.publicKey') ? Promise.resolve(publicKey)
+      : Promise.reject('invalid file')
 
 describe('actions.token', () => {
     test('with no grant_type fails', () => {
@@ -179,7 +179,7 @@ describe('actions.token', () => {
         expect.assertions(3)
 
         const request = {
-            pathParameters: { realm: 'realm' },
+            pathParameters: { realm: 'mojo:default' },
             body: querystring.stringify({
                 grant_type: 'password',
                 client_id: 'client_id',
@@ -325,7 +325,7 @@ describe('actions.token', () => {
         expect.assertions(1)
 
         const request = {
-            pathParameters: { realm: 'realm' },
+            pathParameters: { realm: 'mojo:default' },
             body: querystring.stringify({
                 grant_type: 'refresh_token',
                 client_id: 'client_id',
@@ -337,9 +337,7 @@ describe('actions.token', () => {
         }
 
         return token(request, mocks)
-            .then(token => {
-                expect(token.access_token).toBeTruthy()
-            })
+            .then(token => expect(token.access_token).toBeTruthy())
     })
 
     test('with redirect_uri redirects', () => {
