@@ -1,0 +1,9 @@
+{
+  "pathParameters": {
+    "realm": "username:default"
+  },
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  "body": "access_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzYmRhYjE3Yy04ZThhLTQ3NmItOTIzZS05N2E0NGY2MDhhZjQiLCJ0eXAiOiJCZWFyZXIiLCJyZWFsbSI6Im1vam86ZGVmYXVsdCIsInJvbGVzIjpbXSwiaWF0IjoxNDk3MzQzODc0LCJleHAiOjQ2NTMxMDM4NzQsImF1ZCI6ImRlZmF1bHQiLCJzdWIiOiJ1c2VybmFtZSJ9.XHgiltVcFFgFhqVGxBfwuk2FdFqk1QTm9mJa6IS81h5M5ycrkk3J9FXyc3ONiw80Qhx5lq3WDmNGremoynXboaPHWQFYKFZXBbaFhkK6G-uxMkQl3685ileHCpRSaMcw6X0yiFNWyO5fd-OsozGlVrnahyKenNCxVAJZae2QH0rYgKWlbLATv6kB08L0UZrnP2MSJ_KKZ6Iaz4hKiKlBezMlpz76gXovMNOEztd_WjsL8xz88LLBLwn3IqykW3guS8InOEtt8Ou5SFL37dnwDlP8Od-NoGiTiof6UzAugu1lxoyBbd0iAYjxvcao9sWIwClIbxFxsdHeV2hv7CJbDQ"
+}

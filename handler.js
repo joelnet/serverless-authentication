@@ -8,14 +8,17 @@ const token = require('./actions/token')
 const authorize = require('./actions/authorize')
 const openidConfiguration = require('./actions/openid-configuration')
 const userRegistration = require('./actions/user-registration')
+const createRealmAction = require('./actions/create-realm')
 const withJsonResponse = require('./lib/serviceHelpers').withJsonResponse
 const getUser = require('./services/storage').getUser
 const createUser = require('./services/storage').createUser
 const getRealm = require('./services/storage').getRealm
+const createRealm = require('./services/storage').createRealm
 const logging = require('./services/logging')
 
 const actions = {
     getRealm,
+    createRealm,
     getUser,
     createUser,
     readFile: promisify(fs.readFile),
@@ -40,4 +43,8 @@ module.exports.authorize = callbackify((request, context) =>
 
 module.exports.userRegistration = callbackify((request, context) =>
     withJsonResponse(userRegistration)(request, actions)
+)
+
+module.exports.createRealm = callbackify((request, context) =>
+    withJsonResponse(createRealmAction)(request, actions)
 )
